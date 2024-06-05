@@ -1,38 +1,260 @@
-.App {
-  text-align: center;
+/* All */
+body {
+  overflow-x: hidden !important;
+  scroll-behavior: smooth !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Font */
+.text {
+  font-family: "Lexend", sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Hover CSS */
+.list-link {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.list-link::after {
+  content: "";
+  position: absolute;
+  width: 86%;
+  /* width: 90%; */
+  height: 4px;
+  bottom: 0px;
+  left: 0;
+  background-color: rgb(62, 184, 62);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s ease;
+}
+
+.list-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.list-link.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.list-link.unactive::after {
+  transform: scaleX(0);
+  transform-origin: right;
+}
+
+.title-link {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.title-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 14px;
+  left: 0;
+  background-color: rgb(13, 54, 13);
+  transform: scaleX(1);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.title-link:hover::after {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.li-link {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.li-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 14px;
+  left: 0;
+  background-color: rgb(13, 54, 13);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.li-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.footer-link {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.footer-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0px;
+  left: 0;
+  background-color: rgb(13, 54, 13);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.footer-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* AOS */
+[data-aos^="fade"][data-aos^="fade"] {
+  transition-property: opacity, transform, background-color, color !important;
+}
+/* Card */
+.perspective-800 {
+  perspective: 800px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Slider */
+.slick-dots {
+  display: flex !important;
+  margin-bottom: 1.56em !important;
+}
+/* Radio checked */
+.radio-group {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.radio-label {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
 }
 
-.App-link {
-  color: #61dafb;
+.radio-input {
+  display: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.custom-radio {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.radio-input:checked + .custom-radio {
+  border-color: #4caf50;
+}
+
+.custom-radio::after {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.3s;
+}
+
+.radio-input:checked + .custom-radio::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+/* Checkbox checked  */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+.checkbox-input {
+  display: none;
+}
+
+.custom-checkbox {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.checkbox-input:checked + .custom-checkbox {
+  border-color: #4caf50;
+  background-color: #4caf50;
+}
+
+.custom-checkbox::after {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg) scale(0);
+  transition: transform 0.3s;
+}
+
+.checkbox-input:checked + .custom-checkbox::after {
+  transform: translate(-50%, -50%) rotate(45deg) scale(1);
+}
+
+.checkbox-label:hover .custom-checkbox {
+  border-color: #888;
 }
