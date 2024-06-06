@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { fetchData } from "../../../Header/Header/ListItems";
 import { title } from "../../HomePage/HomePage";
 import ProductShopCard from "../../Product/ProductShopCard";
 
@@ -7,10 +6,22 @@ export default function ItemsList() {
   const [topRated, setTopRated] = useState([]);
 
   useEffect(() => {
-    fetchData(
-      "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-      setTopRated
-    );
+    fetch("http://localhost:3001/api/products")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setTopRated(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
   }, []);
 
   return (
@@ -36,10 +47,10 @@ export default function ItemsList() {
             <ProductShopCard
               key={item.id}
               id={item.id}
-              img={item.backdrop_path}
-              name={item.original_title}
-              material={item.overview}
-              price={item.vote_average}
+              img={item.image}
+              name={item.name}
+              material={"white gold, diamond"}
+              price={item.price}
             />
           </>
         ))}

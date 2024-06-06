@@ -16,20 +16,23 @@ export default function ProductPage() {
   const [topRated, setTopRated] = useState([]);
   // Get data
   useEffect(() => {
-    const options = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NzM4MzM4NjU4OWM5MmJlNWVhMDNiZDA0ZmI4MGRiOCIsInN1YiI6IjY1MjM3NDU2NzQ1MDdkMDBhYzRhOTU3ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.B9vrCoEGitOlsPTq6sfgWxJjEQsfkGN04YR8uO4FLBY",
-      },
-    };
-
-    fetch("https://api.themoviedb.org/3/movie/123?language=en-US", options)
-      .then((response) => response.json())
-      .then((response) => setProductDetails(response))
-      .catch((err) => console.error(err));
-  }, [id]);
+    fetch("http://localhost:3001/api/products")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setTopRated(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }, []);
   useEffect(() => {
     fetchData(
       "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
@@ -75,7 +78,7 @@ export default function ProductPage() {
 
   return (
     <div>
-      {productDetails ? (
+      {topRated ? (
         <div className="">
           <div className="flex">
             {/* Image */}
@@ -151,11 +154,11 @@ export default function ProductPage() {
                   <ProductCard
                     key={item.id}
                     id={item.id}
-                    img={item.backdrop_path}
-                    hovimg={item.poster_path}
-                    name={item.original_title}
-                    material={item.overview}
-                    price={item.vote_average}
+                    img={item.image}
+                    hovimg={item.image}
+                    name={item.name}
+                    material={"Gold, Silver, Diamond"}
+                    price={item.price}
                     mini={true}
                   />
                 ))}

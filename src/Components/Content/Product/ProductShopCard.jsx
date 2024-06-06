@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { imglink } from "../../Header/Header/ListItems";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -83,21 +82,21 @@ export default function ProductShopCard({ id, img, name, material, price }) {
           <Slider className="relative w-full h-full" {...settings}>
             <div className="w-full h-[14em]">
               <img
-                src={`${imglink}${img}`}
+                src={`${img}`}
                 alt={name}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="w-full h-[14em]">
               <img
-                src={`${imglink}${img}`}
+                src={`${img}`}
                 alt={name}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="w-full h-[14em]">
               <img
-                src={`${imglink}${img}`}
+                src={`${img}`}
                 alt={name}
                 className="w-full h-full object-cover"
               />
@@ -138,15 +137,15 @@ export default function ProductShopCard({ id, img, name, material, price }) {
       </Link>
 
       {/* Name */}
-      <div className="text-center uppercase max-h-[3em] overflow-hidden w-[70%] leading-5 mt-2">
+      <div className="text-center uppercase max-h-[2.6em] overflow-hidden w-[70%] leading-5 mt-2">
         <p className="text">{name}</p>
       </div>
       {/* Material */}
-      <div className="mt-4 max-h-12 w-[80%] overflow-hidden text-center font-serif">
+      <div className="mt-4 max-h-12 font-serif w-[80%] overflow-hidden text-center font-serif">
         {material}
       </div>
       {/* Price */}
-      <div className="mt-4 mb-2 text uppercase text-[1.1em]">{price}$</div>
+      <div className="mt-4 mb-2 text uppercase text-[1.1em]">{price},000$</div>
       {/* Select */}
       <div
         className={`text bg-black text-white text-center uppercase py-1 w-[90%] border-black border-[0.1em]

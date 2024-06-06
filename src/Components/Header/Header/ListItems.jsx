@@ -1,46 +1,91 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import ProductListItems from "./ProductListItems";
-import { RingLoader } from 'react-spinners';
+import { RingLoader } from "react-spinners";
 
-export const imglink = "https://image.tmdb.org/t/p/original";
 export const fetchData = async (url, setData) => {
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NzM4MzM4NjU4OWM5MmJlNWVhMDNiZDA0ZmI4MGRiOCIsInN1YiI6IjY1MjM3NDU2NzQ1MDdkMDBhYzRhOTU3ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.B9vrCoEGitOlsPTq6sfgWxJjEQsfkGN04YR8uO4FLBY",
-    },
-  };
-
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url);
     const data = await response.json();
     setData(data.results);
   } catch (err) {
     console.error(err);
   }
 };
+
+export const fetchData2 = async (url, setData) => {
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      setData(data);
+    })
+    .catch((error) => {
+      console.error(
+        "There has been a problem with your fetch operation:",
+        error
+      );
+    });
+};
+
 export default function ListItems({ titles }) {
   // Demo API
   const [data, setData] = useState(null);
   const [activeStates, setActiveStates] = useState(
     Array(titles.length).fill(false)
   );
-  const [apiUrl, setApiUrl] = useState(
-    "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1"
-  );
+  const [apiUrl, setApiUrl] = useState("http://localhost:3001/api/products");
+  // useEffect(() => {
+  //   fetchData(apiUrl, setData);
+  // }, [apiUrl]);
+
+  // useEffect(() => {
+  //   fetchData2(apiUrl, setData);
+  // }, [apiUrl]);
+
   useEffect(() => {
-    fetchData(apiUrl, setData);
+    fetch(apiUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
   }, [apiUrl]);
 
   // Hover
   const handleMouseEnter = (index) => {
-    const newApiUrl = `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=${
-      index + 1
-    }`;
-    setApiUrl(newApiUrl);
+    let newApiUrl;
+    switch (index) {
+      case 0:
+        newApiUrl = "http://localhost:3001/api/products";
+        break;
+      case 1:
+        newApiUrl = "http://localhost:3001/api/ring";
+        break;
+      case 2:
+        newApiUrl = "http://localhost:3001/api/earing";
+        break;
+      // Add more cases as needed for other indices
+      default:
+        newApiUrl = "http://localhost:3001/api/products";
+    }
+    if (newApiUrl !== apiUrl) {
+      setApiUrl(newApiUrl);
+    }
     setActiveStates((prevStates) => {
       const newStates = Array(titles.length).fill(false);
       newStates[index] = true;
@@ -75,8 +120,8 @@ export default function ListItems({ titles }) {
             {data.map((list) => (
               <ProductListItems
                 key={list.id}
-                img={list.backdrop_path}
-                title={list.title}
+                img={list.image}
+                title={list.name}
               />
             ))}
           </Slider>

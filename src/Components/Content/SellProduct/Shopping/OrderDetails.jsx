@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
 import OrderDetailsItem from "./OrderDetailsItem";
 import ProductCard from "../../Product/ProductCard";
-import { fetchData } from "../../../Header/Header/ListItems";
 import Slider from "react-slick";
 import AOS from "aos";
 
 export default function OrderDetails() {
   const date = localStorage.getItem("OrderDate");
-  const [topRated, setTopRated] = useState([]);
+  const [similar, setSimilar] = useState([]);
   // Fetch Data
   useEffect(() => {
-    fetchData(
-      "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-      setTopRated
-    );
+    fetch("http://localhost:3001/api/ring")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setSimilar(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
   }, []);
   // AOS effect
   useEffect(() => {
@@ -102,16 +113,16 @@ export default function OrderDetails() {
           className="relative w-[92%] h-[56vh] flex justify-center items-center"
         >
           <div className="w-full ml-3 h-full">
-            <Slider {...settings}>
-              {topRated.map((item) => (
+            <Slider className="w-full h-full" {...settings}>
+              {similar.slice(0, 4).map((item) => (
                 <ProductCard
                   key={item.id}
                   id={item.id}
-                  img={item.backdrop_path}
-                  hovimg={item.poster_path}
-                  name={item.original_title}
-                  material={item.overview}
-                  price={item.vote_average}
+                  img={item.image}
+                  hovimg={item.image}
+                  name={item.name}
+                  material={"white gold, rose"}
+                  price={item.price}
                   mini={false}
                 />
               ))}

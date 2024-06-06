@@ -7,7 +7,6 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import ProductCard from "../Product/ProductCard";
 import HomeCard from "./HomeCard";
-import { fetchData } from "../../Header/Header/ListItems";
 export const title = (title, info, shop) => {
   return (
     <div className="flex flex-col justify-center items-center">
@@ -37,6 +36,7 @@ export const title = (title, info, shop) => {
 };
 export default function HomePage() {
   const [topRated, setTopRated] = useState([]);
+  const [univer, setUniver] = useState([]);
   // AOS
   useEffect(() => {
     AOS.init({
@@ -46,10 +46,41 @@ export default function HomePage() {
   }, []);
   // Data
   useEffect(() => {
-    fetchData(
-      "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-      setTopRated
-    );
+    fetch("http://localhost:3001/api/trinity")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setTopRated(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/univer")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setUniver(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
   }, []);
   return (
     <div className="w-screen font-serif">
@@ -127,11 +158,11 @@ export default function HomePage() {
             <ProductCard
               key={item.id}
               id={item.id}
-              img={item.backdrop_path}
-              hovimg={item.poster_path}
-              name={item.original_title}
-              material={item.overview}
-              price={item.vote_average}
+              img={item.image}
+              hovimg={item.image}
+              name={item.name}
+              material={"White Gold, Rose Gold"}
+              price={item.price}
               mini={false}
             />
           ))}
@@ -178,8 +209,8 @@ export default function HomePage() {
         </div>
         <div className="w-[90%]">
           <Slider {...settings}>
-            {topRated.map((item) => (
-              <HomeCard key={item.id} bg={item.backdrop_path} />
+            {univer.map((item) => (
+              <HomeCard key={item.id} bg={item.image} />
             ))}
           </Slider>
         </div>

@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import RegisterForm, { Input } from "./RegisterForm";
 import GGLogin from "./GGLogin";
 
 export default function LoginPage() {
-  // useEffect(() => {
-  //   fetch("https://localhost:7279/api/Products")
-  //     .then((res) => res.json())
-  //     .then((data) => console.log(data));
-  // }, []);
-
   const [register, setRegister] = useState(false);
   const [active, setActive] = useState(false);
   const [forgotPass, setForgotPass] = useState(false);

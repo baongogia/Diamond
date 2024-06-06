@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { imglink } from "../../Header/Header/ListItems";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductCard({
@@ -31,13 +30,15 @@ export default function ProductCard({
         onMouseEnter={() => setOnHover(true)}
       >
         <div
-          style={{ backgroundImage: `url(${imglink}${img})` }}
+          style={{
+            backgroundImage: `url(${img})`,
+          }}
           className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-700 ${
             onhover ? "opacity-0" : "opacity-100"
           } `}
         ></div>
         <div
-          style={{ backgroundImage: `url(${imglink}${hovimg})` }}
+          style={{ backgroundImage: `url(${hovimg})` }}
           className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-700 ${
             onhover ? "opacity-100 scale-125" : "opacity-0"
           }`}
@@ -47,17 +48,19 @@ export default function ProductCard({
       {/* Name */}
       <div
         className={`text-center uppercase max-h-[3em] overflow-hidden ${
-          mini ? "w-[70%]" : "w-[90%]"
+          mini ? "w-[70%] max-h-[2.6em]" : "w-[90%]"
         } leading-5 mt-2`}
       >
         <p className="text">{name}</p>
       </div>
       {/* Material */}
-      <div className="mt-2 max-h-12 w-[80%] overflow-hidden text-center">
+      <div className="mt-2 max-h-12  font-serif w-[80%] overflow-hidden text-center">
         {material}
       </div>
       {/* Price */}
-      <div className="mt-2 mb-2 text uppercase text-[1.1em]">{price}$</div>
+      <div className="mt-2 mb-2 text uppercase text-[1.1em]">
+        {`${price},000$`}
+      </div>
       {/* Select */}
       <div
         className={`text bg-black text-white text-center uppercase py-1 w-[90%] border-black border-[0.1em]
