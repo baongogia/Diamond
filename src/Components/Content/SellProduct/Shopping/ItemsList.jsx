@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { title } from "../../HomePage/HomePage";
 import ProductShopCard from "../../Product/ProductShopCard";
 
-export default function ItemsList() {
+export default function ItemsList({ category }) {
   const [topRated, setTopRated] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/products")
+    fetch(`http://localhost:3001/api/${category}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -22,7 +22,7 @@ export default function ItemsList() {
           error
         );
       });
-  }, []);
+  }, [category]);
 
   return (
     <div className="w-[70vw] h-max">

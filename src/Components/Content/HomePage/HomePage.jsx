@@ -19,14 +19,14 @@ export const title = (title, info, shop) => {
       </div>
       <div
         data-aos="fade-up"
-        data-aos-duration="1300"
+        data-aos-duration="1100"
         className="tracking-wide mb-3 text-center font-serif"
       >
         {info}
       </div>
       <div
         data-aos="fade-up"
-        data-aos-duration="1500"
+        data-aos-duration="1200"
         className="title-link h-10 mb-3 cursor-pointer"
       >
         {shop}
@@ -41,7 +41,8 @@ export default function HomePage() {
   useEffect(() => {
     AOS.init({
       once: true,
-      duration: 2000,
+      duration: 1500,
+      offset: 0,
     });
   }, []);
   // Data
@@ -86,7 +87,7 @@ export default function HomePage() {
     <div className="w-screen font-serif">
       {/* Part 1 */}
       <IntroVideo />
-      <div className="w-full flex flex-col justify-center items-center mt-8">
+      <div className="w-full flex flex-col justify-center items-center pt-8">
         {title(
           "The Magic Of Sparkle Of Heaven",
           "Share your love with a heartfelt gesture. Cartier creations celebrate the joy of giving.",

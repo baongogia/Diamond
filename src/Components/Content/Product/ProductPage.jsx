@@ -5,16 +5,14 @@ import AOS from "aos";
 import ProductServices from "./ProductServices";
 import Slider from "react-slick";
 import ProductCard from "./ProductCard";
-import { fetchData } from "../../Header/Header/ListItems";
 import { RingLoader } from "react-spinners";
 
 export default function ProductPage() {
   const { id } = useParams();
   const [onScroll, setOnScroll] = useState(false);
   const [stop, setStop] = useState(false);
-  const [productDetails, setProductDetails] = useState(null);
-  const [topRated, setTopRated] = useState([]);
-  // Get data
+  const [suggest, setSuggest] = useState([]);
+
   useEffect(() => {
     fetch("http://localhost:3001/api/products")
       .then((response) => {
@@ -24,7 +22,7 @@ export default function ProductPage() {
         return response.json();
       })
       .then((data) => {
-        setTopRated(data);
+        setSuggest(data);
       })
       .catch((error) => {
         console.error(
@@ -32,14 +30,8 @@ export default function ProductPage() {
           error
         );
       });
-  }, []);
-  useEffect(() => {
-    fetchData(
-      "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1",
-      setTopRated
-    );
-  }, []);
-  // Scroll effect
+  }, [id]);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -49,7 +41,7 @@ export default function ProductPage() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  // AOS effect
+
   useEffect(() => {
     AOS.init({
       once: true,
@@ -64,13 +56,13 @@ export default function ProductPage() {
           style={{
             backgroundImage: `url('https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw0b044e33/images/large/8e9061d803d459ca81185cc8e9e908b2.png?sw=750&sh=750&sm=fit&sfrm=png')`,
           }}
-          className="w-[49%] h-[40vh] bg-green-700 bg-cover bg-center bg-no-repeat"
+          className="w-[49%] h-[40vh] bg-cover bg-center bg-no-repeat"
         ></div>
         <div
           style={{
             backgroundImage: `url('https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw6601bd54/images/large/e0ab227094b3597db29fe5ffd7801606.png?sw=750&sh=750&sm=fit&sfrm=png')`,
           }}
-          className="w-[49%] h-[40vh] bg-green-700 bg-cover bg-center bg-no-repeat"
+          className="w-[49%] h-[40vh] bg-cover bg-center bg-no-repeat"
         ></div>
       </div>
     );
@@ -78,7 +70,7 @@ export default function ProductPage() {
 
   return (
     <div>
-      {topRated ? (
+      {suggest.length > 0 ? (
         <div className="">
           <div className="flex">
             {/* Image */}
@@ -88,7 +80,7 @@ export default function ProductPage() {
                   style={{
                     backgroundImage: `url('https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dwc8f06135/images/large/af03d2f2f37e5479aed7db34efc59478.png?sw=750&sh=750&sm=fit&sfrm=png')`,
                   }}
-                  className="w-full h-[88vh] bg-green-700 bg-cover bg-center bg-no-repeat"
+                  className="w-full h-[88vh] bg-cover bg-center bg-no-repeat"
                 ></div>
               </div>
 
@@ -99,16 +91,14 @@ export default function ProductPage() {
               {miniImg()}
             </div>
             {/* Buy */}
-            <div
-              className={`w-[40.1vw] h-[80vh] mr-20 ${
-                onScroll ? "translate-y-0" : "translate-y-[20vh]"
-              } ${stop ? "sticky top-0" : "fixed right-0 top-0"}`}
-            >
+            <div className={`w-[40.1vw] h-[67vh] mr-20 sticky top-0 `}>
               <SelectProduct />
             </div>
           </div>
-          {/* More Infor */}
-          <div className="w-[95vw] h-[70vh] flex items-center justify-around mt-8 ml-10">
+          {/* More Info */}
+          <div
+            className={`w-[95vw] h-[70vh] flex items-center justify-around mt-8 ml-10`}
+          >
             <div
               style={{
                 backgroundImage: `url("https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw32f332a1/images/large/7ce045b164a25f92a272cd48e0128929.png?sw=750&sh=750&sm=fit&sfrm=png")`,
@@ -150,7 +140,7 @@ export default function ProductPage() {
             <div className="text text-[1.6em] mb-8">YOU MAY ALSO LIKE</div>
             <div className="w-[70%]">
               <Slider {...settings}>
-                {topRated.map((item) => (
+                {suggest.map((item) => (
                   <ProductCard
                     key={item.id}
                     id={item.id}
@@ -181,6 +171,7 @@ export default function ProductPage() {
     </div>
   );
 }
+
 // Slider Control
 function SampleNextArrow(props) {
   const { onClick } = props;
@@ -194,6 +185,7 @@ function SampleNextArrow(props) {
     </div>
   );
 }
+
 function SamplePrevArrow(props) {
   const { onClick } = props;
   return (
@@ -206,6 +198,7 @@ function SamplePrevArrow(props) {
     </div>
   );
 }
+
 const settings = {
   dots: false,
   infinite: false,

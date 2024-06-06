@@ -15,7 +15,7 @@ export default function ShoppingBag() {
         const itemsRect = itemsRef.current.getBoundingClientRect();
 
         // Calculate the position where Total bill should stop
-        const stopPosition = itemsRect.height - totalBillRect.height;
+        const stopPosition = itemsRect.height - totalBillRect.height - 150;
 
         if (window.scrollY >= stopPosition) {
           setIsSticky(false);

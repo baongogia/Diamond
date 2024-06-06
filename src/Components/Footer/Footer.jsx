@@ -45,8 +45,11 @@ export default function Footer() {
         />
       </div>
       {/* Copyright */}
-      <div className="w-screen h-[2em] flex justify-center items-center bg-green-900">
-          <div className="text-white">Copyright by Gia Bao {':>'}</div>
+      <div className="w-screen h-[4em] flex justify-center items-center bg-green-900">
+        <div className="flex justify-between text-white w-[80%] items-center">
+          <div className="uppercase">Shop in: VIET NAM</div>
+          <div className="text-white uppercase">Copyright @ 2024 GiaBao</div>
+        </div>
       </div>
     </div>
   );

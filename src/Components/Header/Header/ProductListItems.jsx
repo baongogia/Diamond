@@ -1,12 +1,11 @@
 import React from "react";
-import { imglink } from "./ListItems";
 import { useNavigate } from "react-router-dom";
 
-export default function ProductListItems({ img, title }) {
+export default function ProductListItems({ img, title, category }) {
   const navigate = useNavigate();
   return (
     <div
-      onClick={() => navigate("/AllItems")}
+      onClick={() => navigate(`/AllItems/${category}`)}
       className="flex flex-col justify-center items-center"
     >
       <div

@@ -33,19 +33,12 @@ export const fetchData2 = async (url, setData) => {
 };
 
 export default function ListItems({ titles }) {
-  // Demo API
   const [data, setData] = useState(null);
+  const [category, setCategory] = useState("");
   const [activeStates, setActiveStates] = useState(
     Array(titles.length).fill(false)
   );
   const [apiUrl, setApiUrl] = useState("http://localhost:3001/api/products");
-  // useEffect(() => {
-  //   fetchData(apiUrl, setData);
-  // }, [apiUrl]);
-
-  // useEffect(() => {
-  //   fetchData2(apiUrl, setData);
-  // }, [apiUrl]);
 
   useEffect(() => {
     fetch(apiUrl)
@@ -66,25 +59,29 @@ export default function ListItems({ titles }) {
       });
   }, [apiUrl]);
 
-  // Hover
   const handleMouseEnter = (index) => {
     let newApiUrl;
+    let newCategory;
     switch (index) {
       case 0:
         newApiUrl = "http://localhost:3001/api/products";
+        newCategory = "products";
         break;
       case 1:
         newApiUrl = "http://localhost:3001/api/ring";
+        newCategory = "ring";
         break;
       case 2:
         newApiUrl = "http://localhost:3001/api/earing";
+        newCategory = "earing";
         break;
-      // Add more cases as needed for other indices
       default:
         newApiUrl = "http://localhost:3001/api/products";
+        newCategory = "products";
     }
     if (newApiUrl !== apiUrl) {
       setApiUrl(newApiUrl);
+      setCategory(newCategory);
     }
     setActiveStates((prevStates) => {
       const newStates = Array(titles.length).fill(false);
@@ -92,9 +89,10 @@ export default function ListItems({ titles }) {
       return newStates;
     });
   };
-  // Active first element
-  React.useEffect(() => {
+
+  useEffect(() => {
     setActiveStates(titles.map((title, index) => index === 0));
+    setCategory("products");
   }, [titles]);
 
   return (
@@ -122,6 +120,7 @@ export default function ListItems({ titles }) {
                 key={list.id}
                 img={list.image}
                 title={list.name}
+                category={category}
               />
             ))}
           </Slider>
@@ -132,7 +131,12 @@ export default function ListItems({ titles }) {
         )}
       </div>
       {/* Link shop */}
-      <div className="absolute title-link h-10 mb-3 cursor-pointer font-serif -bottom-8">
+      <div
+        onClick={() =>
+          (window.location.href = `/allitems?category=${category}`)
+        }
+        className="absolute title-link h-10 mb-3 cursor-pointer font-serif -bottom-8"
+      >
         View all
       </div>
     </div>
@@ -152,6 +156,7 @@ function SampleNextArrow(props) {
     </div>
   );
 }
+
 function SamplePrevArrow(props) {
   const { onClick } = props;
   return (
@@ -164,6 +169,7 @@ function SamplePrevArrow(props) {
     </div>
   );
 }
+
 const settings = {
   dots: false,
   infinite: true,

@@ -9,7 +9,8 @@ export default function HideFooter({ children }) {
     if (
       location.pathname.startsWith("/CheckOutPage") ||
       location.pathname.startsWith("/ReviewOrder") ||
-      location.pathname.startsWith("/OrderSuccess")
+      location.pathname.startsWith("/OrderSuccess") ||
+      location.pathname.startsWith("/ShoppingBag")
     ) {
       setShowNav(false);
     } else {

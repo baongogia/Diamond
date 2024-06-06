@@ -1,8 +1,11 @@
 import React from "react";
 import SideBar from "./SideBar";
 import ItemsList from "./ItemsList";
+import { useParams } from "react-router-dom";
 
 export default function AllItems() {
+  const category = useParams();
+  const cat = category.category;
   return (
     <div className="">
       {/* Introduce */}
@@ -15,14 +18,14 @@ export default function AllItems() {
         ></div>
         <div className="w-1/2 h-full bg-black bg-opacity-5 flex justify-center items-center">
           <div className="w-1/2">
-            <div className="text uppercase text-[1.6em] mb-2">TRINITY</div>
+            <div className="text uppercase text-[1.6em] mb-2">{cat}</div>
             <div className="font-serif">
-              Trinity is the perfect equation: clean lines, accurate
+              {`${cat} is the perfect equation: clean lines, accurate
               proportions, precise shapes. To celebrate 100 years of Trinity,
               Cartier has designed three new variations on the ring: a
               cushion-shaped version, a modular version and an XL version. The
               collection also includes a reissue of the XL bracelet, a true cult
-              piece.
+              piece.`}
             </div>
           </div>
         </div>
@@ -31,7 +34,7 @@ export default function AllItems() {
         {/* SideBar */}
         <SideBar />
         {/* Items */}
-        <ItemsList />
+        <ItemsList category={cat} />
       </div>
     </div>
   );

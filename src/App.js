@@ -40,7 +40,7 @@ function App() {
         <Route path="/DiamonKnow" element={<DiamonKnow />} />
         <Route path="/JewelryKnow" element={<JewelryKnow />} />
         <Route path="/Intro" element={<Intro />} />
-        <Route path="/AllItems" element={<AllItems />} />
+        <Route path="/AllItems/:category" element={<AllItems />} />
         <Route path="/ShoppingBag" element={<ShoppingBag />} />
         <Route path="/CheckOutPage" element={<CheckOutPage />} />
         <Route path="/ReviewOrder" element={<ReviewOrder />} />

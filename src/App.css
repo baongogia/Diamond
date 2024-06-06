@@ -2,6 +2,7 @@
 body {
   overflow-x: hidden !important;
   scroll-behavior: smooth !important;
+  /* transform: translateX(-5px); */
 }
 
 /* Font */
