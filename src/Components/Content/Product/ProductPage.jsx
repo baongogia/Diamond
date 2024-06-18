@@ -9,12 +9,30 @@ import { RingLoader } from "react-spinners";
 
 export default function ProductPage() {
   const { id } = useParams();
-  const [onScroll, setOnScroll] = useState(false);
-  const [stop, setStop] = useState(false);
   const [suggest, setSuggest] = useState([]);
-
+  const [productDetails, setProductDetails] = useState([]);
+  // Data
   useEffect(() => {
-    fetch("http://localhost:3001/api/products")
+    fetch(`https://localhost:7292/api/Products/${id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setProductDetails(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }, [id]);
+  // Succgest
+  useEffect(() => {
+    fetch(`https://localhost:7292/api/Products`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -31,36 +49,34 @@ export default function ProductPage() {
         );
       });
   }, [id]);
-
+  // When scroll
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setOnScroll(currentScrollY > 150);
-      setStop(currentScrollY > 1800);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
+  // AOS Effect
   useEffect(() => {
     AOS.init({
       once: true,
       duration: 2000,
     });
   }, []);
-
-  const miniImg = () => {
+  // Mini image
+  const MiniImg = ({ image, image2 }) => {
     return (
       <div className="flex mt-4 justify-between">
         <div
           style={{
-            backgroundImage: `url('https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw0b044e33/images/large/8e9061d803d459ca81185cc8e9e908b2.png?sw=750&sh=750&sm=fit&sfrm=png')`,
+            backgroundImage: `url(${image})`,
           }}
           className="w-[49%] h-[40vh] bg-cover bg-center bg-no-repeat"
         ></div>
         <div
           style={{
-            backgroundImage: `url('https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw6601bd54/images/large/e0ab227094b3597db29fe5ffd7801606.png?sw=750&sh=750&sm=fit&sfrm=png')`,
+            backgroundImage: `url(${image2})`,
           }}
           className="w-[49%] h-[40vh] bg-cover bg-center bg-no-repeat"
         ></div>
@@ -70,29 +86,43 @@ export default function ProductPage() {
 
   return (
     <div>
-      {suggest.length > 0 ? (
+      {/* Product Image */}
+      {productDetails ? (
         <div className="">
           <div className="flex">
             {/* Image */}
             <div className="relative w-[50vw] h-max ml-16">
               <div className="">
-                <div
-                  style={{
-                    backgroundImage: `url('https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dwc8f06135/images/large/af03d2f2f37e5479aed7db34efc59478.png?sw=750&sh=750&sm=fit&sfrm=png')`,
-                  }}
-                  className="w-full h-[88vh] bg-cover bg-center bg-no-repeat"
-                ></div>
+                {productDetails.Image ? (
+                  <div
+                    style={{
+                      backgroundImage: `url(${productDetails.Image})`,
+                    }}
+                    className="w-full h-[88vh] bg-cover bg-center bg-no-repeat"
+                  ></div>
+                ) : (
+                  <div className="w-full h-[88vh] flex justify-center items-center">
+                    <RingLoader size={100} color="#54cc26" />
+                  </div>
+                )}
               </div>
 
-              {miniImg()}
-              {miniImg()}
-              {miniImg()}
-              {miniImg()}
-              {miniImg()}
+              <MiniImg
+                image="https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw3f440a80/images/large/f7d87b96f2dd5aefb8906787c574fc9b.png?sw=750&sh=750&sm=fit&sfrm=png"
+                image2="https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dwb69f3540/images/large/d7f702ef4a1b599a8bad047c468fa526.png?sw=750&sh=750&sm=fit&sfrm=png"
+              />
+              <MiniImg
+                image="https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dwc9f94916/images/large/0debb05c7334590293530f3d4d5ac82a.png?sw=750&sh=750&sm=fit&sfrm=png"
+                image2="https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw5555a615/images/large/a53b0f71f72e54c19e9c09f5c84d65c7.png?sw=750&sh=750&sm=fit&sfrm=png"
+              />
+              <MiniImg
+                image="https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dwe4047068/images/large/d288595f046554599461b5322f0c05e9.png?sw=750&sh=750&sm=fit&sfrm=png"
+                image2="https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw930644bd/images/large/ffa80ab2d53b578d8e0ce9037e422102.png?sw=750&sh=750&sm=fit&sfrm=png"
+              />
             </div>
             {/* Buy */}
             <div className={`w-[40.1vw] h-[67vh] mr-20 sticky top-0 `}>
-              <SelectProduct />
+              <SelectProduct details={productDetails} />
             </div>
           </div>
           {/* More Info */}
@@ -140,15 +170,15 @@ export default function ProductPage() {
             <div className="text text-[1.6em] mb-8">YOU MAY ALSO LIKE</div>
             <div className="w-[70%]">
               <Slider {...settings}>
-                {suggest.map((item) => (
+                {suggest.map((item, index) => (
                   <ProductCard
-                    key={item.id}
-                    id={item.id}
-                    img={item.image}
-                    hovimg={item.image}
-                    name={item.name}
-                    material={"Gold, Silver, Diamond"}
-                    price={item.price}
+                    key={index}
+                    id={item.ProductId}
+                    img={item.Image}
+                    hovimg={item.Image}
+                    name={item.ProductName}
+                    material={item.Material}
+                    price={parseFloat(item.ProductPrice).toFixed(2)}
                     mini={true}
                   />
                 ))}
@@ -157,7 +187,7 @@ export default function ProductPage() {
           </div>
           <div className="w-full flex flex-col justify-center items-center">
             <img
-              src="https://www.cartier.com/on/demandware.static/Sites-CartierUS-Site/-/default/dw2fd9b902/images/panthereCartierImageTransparent.png"
+              src="https://png.pngtree.com/png-vector/20220719/ourmid/pngtree-eternal-love-symbol-heart-infinity-sign-calligraphy-for-declarations-vector-png-image_37918768.png"
               alt=""
               className="w-1/6"
             />
@@ -185,7 +215,6 @@ function SampleNextArrow(props) {
     </div>
   );
 }
-
 function SamplePrevArrow(props) {
   const { onClick } = props;
   return (
@@ -198,7 +227,6 @@ function SamplePrevArrow(props) {
     </div>
   );
 }
-
 const settings = {
   dots: false,
   infinite: false,

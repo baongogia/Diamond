@@ -1,38 +1,63 @@
-import React, { useState, useContext } from "react";
-import Select from "react-select";
+import React, { useState, useContext, useEffect } from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { CartContext } from "../../Header/Header/Cart/CartContext";
+import Select from "react-select";
 
-export default function SelectProduct() {
+export default function SelectProduct({ details }) {
   const { id } = useParams();
-  // const [mainDiamond, setMainDiamond] = useState(null);
-  // const [secondDiamond, setSecondDiamond] = useState(null);
-  // const [bark, setBark] = useState(null);
-  const [size, setSize] = useState(null);
+  const oriSize = details.ProductSize || 0;
+  const [size, setSize] = useState({
+    value: oriSize,
+    label: oriSize.toString(),
+  });
   const [showIns, setShowIns] = useState(false);
   const [showMissingMsg, setShowMissingMsg] = useState(false);
   const [redHeart, setRedHeart] = useState(false);
   const [showCer, setShowCer] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showVid, setShowVid] = useState(false);
-  const allSelected = size;
-  const { setShowCart } = useContext(CartContext);
+  const { setShowCart, addToCart } = useContext(CartContext);
+  //  Get original size
+  useEffect(() => {
+    if (oriSize) {
+      setSize({ value: oriSize, label: oriSize.toString() });
+    }
+  }, [oriSize]);
+  // Original price
+  const oriPrice = details.ProductPrice;
+  // Price up
+  const calculatePrice = (selectedSize) => {
+    return details.UnitSizePrice * (selectedSize - details.ProductSize);
+  };
+  // Calculate price
+  const selectedSize = size ? size.value : oriSize;
+  const price =
+    selectedSize >= oriSize && selectedSize < 100
+      ? oriPrice + calculatePrice(selectedSize)
+      : null;
 
-  const { addToCart } = useContext(CartContext);
-
+  const formatPrice = (price) => {
+    return price ? parseFloat(price).toFixed(2) + "$" : "";
+  };
+  // Add to cart
   const handleAddToCart = () => {
-    if (allSelected) {
+    if (selectedSize >= oriSize) {
       const product = {
-        id,
-        size,
+        productID: details.ProductId,
+        image: details.Image,
+        name: details.ProductName,
+        material: details.Material,
+        size: selectedSize,
+        price: price,
+        code: id,
       };
       addToCart(product);
       setShowCart(true);
     }
   };
-
+  // Animation
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
@@ -40,42 +65,33 @@ export default function SelectProduct() {
   const toggleHeart = () => {
     setRedHeart(!redHeart);
   };
-
+  // Miss
   const getMissingSelections = () => {
     let missing = [];
     if (!size) missing.push("Size");
-    // if (!secondDiamond) missing.push("Second Diamond");
-    // if (!bark) missing.push("Ring Shell");
     return missing.join(", ");
   };
 
   const missingSelections = getMissingSelections();
-
   const missingMessage =
     missingSelections.length === 1
       ? `Please Select: ${missingSelections[0]}`
       : "Please Select Size";
-
+  // Size to select
   const options = [
-    { value: "3ly7", label: "3ly7" },
-    { value: "4ly3", label: "4ly3" },
-    { value: "6ly8", label: "6ly8" },
+    { value: 10, label: "10" },
+    { value: 11, label: "11" },
+    { value: 12, label: "12" },
+    { value: 13, label: "13" },
+    { value: 14, label: "14" },
+    { value: 15, label: "15" },
+    { value: details.ProductSize, label: `${details.ProductSize}` },
   ];
 
-  // Mapping sizes to prices
-  const sizePriceMapping = {
-    "3ly7": "100,000$",
-    "4ly3": "200,000$",
-    "6ly8": "300,000$",
+  const handleChange = (selectedOption) => {
+    setSize(selectedOption);
   };
-
-  // Calculate price based on selected size
-  const price = size ? sizePriceMapping[size.value] : "";
-
-  const handleChange = (setter) => (selectedOption) => {
-    setter(selectedOption);
-  };
-
+  // Css input
   const colourStyles = {
     control: (styles, { isFocused }) => ({
       ...styles,
@@ -105,10 +121,10 @@ export default function SelectProduct() {
   return (
     <div className="w-[80%] float-right flex flex-col justify-center items-start">
       <div className="text uppercase text-[1.6em] text-green-800">
-        TRINITY CUSHION NECKLACE
+        {details.ProductName}
       </div>
-      <div className="mb-3 font-serif">
-        Trinity necklace, 18K white gold (750/1000), 18K rose gold (750/1000)
+      <div className="mb-3 Mfont">
+        {`${details.Description}, 24K ${details.Material}, ${details.CaratWeight} Carat, ${details.GemOrigin} Origin, Clarity ${details.Clarity},  Color ${details.Color}, ${details.Cut} Cut, For ${details.Gender}.`}
       </div>
       <div className="flex w-full justify-between items-center">
         <div className="">
@@ -128,39 +144,19 @@ export default function SelectProduct() {
       </div>
       {/* Select */}
       <div className="w-full">
-        {/* <Select
-          placeholder="Select Main Diamond"
-          options={options}
-          onChange={handleChange(setMainDiamond)}
-          styles={colourStyles}
-          className="text"
-        />
-        <Select
-          placeholder="Select Second Diamond"
-          options={options}
-          onChange={handleChange(setSecondDiamond)}
-          styles={colourStyles}
-          className="text mt-8"
-        />
-        <Select
-          placeholder="Select Ring Shell"
-          options={options}
-          onChange={handleChange(setBark)}
-          styles={colourStyles}
-          className="text mt-8"
-        /> */}
         <Select
           placeholder="Select Size"
           options={options}
-          onChange={handleChange(setSize)}
+          onChange={handleChange}
           styles={colourStyles}
           className="text mt-8"
+          value={size}
         />
       </div>
       {/* Price */}
       <div className="flex w-full h-[5vh] mt-4 justify-between items-center">
         <div className="text uppercase text-[1.6em] text-green-800">
-          {price}
+          {`${formatPrice(price)}`}
         </div>
         {/* Measuring */}
         <div
@@ -182,23 +178,21 @@ export default function SelectProduct() {
       {/* Add */}
       <div className="w-full flex justify-between mt-3">
         <div
-          onMouseEnter={() => !allSelected && setShowMissingMsg(true)}
+          onMouseEnter={() => !size && setShowMissingMsg(true)}
           onMouseLeave={() => setShowMissingMsg(false)}
           onClick={handleAddToCart}
           className={`group w-[83%] h-[2.5em] bg-black flex justify-center items-center cursor-pointer ${
-            allSelected
-              ? "bg-opacity-100"
-              : "bg-opacity-25 hover:bg-opacity-100"
+            size ? "bg-opacity-100" : "bg-opacity-25 hover:bg-opacity-100"
           } }`}
         >
           <div
             className={`text uppercase ${
-              allSelected
+              size
                 ? "text-white"
                 : "text-gray-700 group-hover:text-white group-hover:pointer-events-none"
             }`}
           >
-            {showMissingMsg && !allSelected ? missingMessage : "Add to Bag"}
+            {showMissingMsg && !size ? missingMessage : "Add to Bag"}
           </div>
         </div>
         <div
@@ -211,7 +205,7 @@ export default function SelectProduct() {
         </div>
       </div>
       {/* Contact */}
-      <div className="mt-8 flex flex-col justify-between w-full h-[24vh] text-[1.1em]">
+      <div className="mt-8 flex flex-col justify-between w-full h-[24vh] font-thin text-[1.1em]">
         <div className="flex items-center">
           <ion-icon name="call-outline"></ion-icon>
           <div className="uppercase ml-4 footer-link">
@@ -264,14 +258,14 @@ export default function SelectProduct() {
       </div>
       {/* Video */}
       <div
-        className={`absolute -top-6 -left-[45vw] border-green-700 border-[0.3em] rounded-md ${
+        className={`absolute top-0 left-0 border-green-700 border-[0.3em] rounded-md ${
           showVid
             ? "opacity-100 translate-y-0"
             : "opacity-0 pointer-events-none -translate-y-[80vh]"
         } transition-all duration-700 pt-8 bg-green-900`}
       >
         <div className="relative">
-          <video className="w-full h-[76vh]" autoPlay loop muted controls>
+          <video className="w-full h-[75.5vh]" autoPlay loop muted controls>
             <source src="/Measure.mp4" type="video/mp4" />
           </video>
           <div

@@ -8,7 +8,11 @@ export default function CheckOutPage() {
   const totalBillRef = useRef(null);
   const itemsRef = useRef(null);
   const [isSticky, setIsSticky] = useState(true);
-
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  // Handle scroll event
   useEffect(() => {
     const handleScroll = () => {
       if (totalBillRef.current && itemsRef.current) {
@@ -37,11 +41,7 @@ export default function CheckOutPage() {
       <div className="flex justify-center items-center bg-white">
         {/* Logo */}
         <Link to={"/"} className="w-[70%] h-[70%] mt-5 flex justify-around">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Cartier_logo.svg/1200px-Cartier_logo.svg.png"
-            alt=""
-            className="w-[16%] mt-4"
-          />
+          <div className="w-[20%] text-[2.8em] logo">EterniTy</div>
         </Link>
       </div>
       {/* Payment */}
@@ -52,7 +52,7 @@ export default function CheckOutPage() {
             <div className="text ml-10 mt-8 text-[1.2em]">SHIPPING ADDRESS</div>
             <div className=" w-full h-[8vh] flex justify-start items-center bg-gray-500 bg-opacity-5 mt-14">
               <div className="font-serif text-[0.9em] ml-10">
-                Please note that for security purposes, Cartier is unable to
+                Please note that for security purposes, Eternity is unable to
                 ship to hotels or post office boxes.
               </div>
             </div>
@@ -61,10 +61,10 @@ export default function CheckOutPage() {
                 {" "}
                 Order placed on this site can be delivered only in the United
                 States. If you would like your order to arrive elsewhere, you
-                will need to change your Cartier site country.<br></br> For more
-                information regarding your order, please contact us at
-                1-800-CARTIER (1-800-227-8437), where a Cartier Ambassador will
-                be delighted to assist you.
+                will need to change your Eternity site country.<br></br> For
+                more information regarding your order, please contact us at
+                1-800-ETERNITY (1-800-227-8437), where a Eternity Ambassador
+                will be delighted to assist you.
               </div>
             </div>
             <div className="relative ml-8 w-1/3 h-[25vh] mt-8 border-black border-[0.1em]">
@@ -98,7 +98,7 @@ export default function CheckOutPage() {
             <div className="w-[90%] h-[85%]">
               <div className="text uppercase">Shipping method</div>
               <div className="font-serif text-[0.95em] mt-8">
-                Cartier offers complimentary secure delivery on all orders. A
+                Eternity offers complimentary secure delivery on all orders. A
                 signature from an adult 21+ will be required for all delivery
                 methods.
               </div>

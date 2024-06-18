@@ -1,17 +1,68 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import RegisterForm, { Input } from "./RegisterForm";
 import GGLogin from "./GGLogin";
+import axios from "axios";
+import { UserContext } from "./UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [register, setRegister] = useState(false);
   const [active, setActive] = useState(false);
   const [forgotPass, setForgotPass] = useState(false);
   const [overlay, setOverlay] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useContext(UserContext);
+  const navigate = useNavigate();
+  const handleLogin = async (username, password) => {
+    try {
+      const response = await axios.post(
+        "https://localhost:7292/api/Accounts/login",
+        {
+          username,
+          password,
+        }
+      );
+      const userData = response.data;
 
-  const toogleForgotPass = () => {
+      // Update local storage
+      localStorage.setItem("userData", JSON.stringify({ data: userData }));
+      localStorage.setItem("isLoggedIn", "true");
+
+      // Update context state
+      login(userData);
+      navigate("/UserProfile");
+
+      console.log("Login successful!");
+      console.log(response.data);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin(username, password);
+  };
+
+  axios.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  const toggleForgotPass = () => {
     setForgotPass(!forgotPass);
     setOverlay(!overlay);
   };
+
   return (
     <div className="relative z-[0] pointer-events-auto w-[100vw] mt-16">
       <div className="w-full flex justify-center mb-8">
@@ -55,27 +106,27 @@ export default function LoginPage() {
           <div className={`font-serif mt-20 text-start w-[37.5%]`}>
             {register
               ? "This space allows you to manage your personal information, e-Boutique orders, news updates and newsletter subscriptions."
-              : "If you are already registed with Cartier, login here:"}
+              : "If you are already registed with Eternity, login here:"}
           </div>
           <div
             className={`absolute top-28 font-serif flex items-center flex-col w-full ${
               register ? "hidden" : ""
             }`}
           >
-            <form className="w-1/4">
+            {/* Form login */}
+            <form onSubmit={handleSubmit} className="w-1/4">
               <label className="block mb-8">
                 <span className="block text-sm text-zinc-700 opacity-60">
                   Email address
                 </span>
                 <input
-                  type="email"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                   placeholder="your@gmail.com"
                   className="peer ... outline-none border-b-[0.1em] border-b-black bg-zinc-300 bg-opacity-0 w-full"
                 />
-                {/* <p className="mt-2 invisible peer-invalid:visible text-red-500 text-sm">
-                  Please provide a valid email address.
-                </p> */}
               </label>
               <label className="block">
                 <span className="block text-sm text-zinc-700 opacity-60">
@@ -83,16 +134,15 @@ export default function LoginPage() {
                 </span>
                 <input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="*******"
                   className="peer ... outline-none border-b-[0.1em] border-b-black bg-zinc-300 bg-opacity-0 w-full"
                 />
-                {/* <p className="mt-1 invisible peer-invalid:visible text-red-500 text-sm">
-                  This field is required
-                </p> */}
               </label>
               <div
-                onClick={toogleForgotPass}
+                onClick={toggleForgotPass}
                 className="underline mt-8 cursor-pointer"
               >
                 Forgot your password?
@@ -101,12 +151,13 @@ export default function LoginPage() {
                 Read the Privacy Policy for further information
               </div>
               <div className="w-full mt-14 flex flex-col justify-center items-center">
-                <div
+                <button
+                  type="submit"
                   className="bg-black text-center text-white w-[63%] font-semibold px-4 py-2
                  hover:bg-white hover:text-black border-black border-solid border-[0.1em] cursor-pointer transition-colors duration-500"
                 >
                   Login
-                </div>
+                </button>
                 <div className="mt-2">Or</div>
                 <div className="mt-2">
                   <GGLogin />
@@ -135,7 +186,7 @@ export default function LoginPage() {
             forgot your password
           </div>
           <div
-            onClick={toogleForgotPass}
+            onClick={toggleForgotPass}
             className="absolute top-3 right-3 cursor-pointer opacity-50"
           >
             <ion-icon size="large" name="close-outline"></ion-icon>

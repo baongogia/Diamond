@@ -141,11 +141,11 @@ export default function ProductShopCard({ id, img, name, material, price }) {
         <p className="text">{name}</p>
       </div>
       {/* Material */}
-      <div className="mt-4 max-h-12 font-serif w-[80%] overflow-hidden text-center font-serif">
+      <div className="mt-4 max-h-12 font-serif w-[80%] overflow-hidden text-center">
         {material}
       </div>
       {/* Price */}
-      <div className="mt-4 mb-2 text uppercase text-[1.1em]">{price},000$</div>
+      <div className="mt-4 mb-2 text uppercase text-[1.1em]">{price}$</div>
       {/* Select */}
       <div
         className={`text bg-black text-white text-center uppercase py-1 w-[90%] border-black border-[0.1em]

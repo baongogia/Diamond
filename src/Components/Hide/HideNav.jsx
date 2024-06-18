@@ -7,10 +7,9 @@ export default function HideNav({ children }) {
 
   useEffect(() => {
     if (
-      location.pathname.startsWith("/ShoppingBag") ||
-      location.pathname.startsWith("/CheckOutPage") ||
-      location.pathname.startsWith("/ReviewOrder") ||
-      location.pathname.startsWith("/OrderSuccess")
+      location.pathname === "/CheckOutPage" ||
+      location.pathname === "/ReviewOrder" ||
+      location.pathname === "/OrderSuccess"
     ) {
       setShow(false);
     } else {

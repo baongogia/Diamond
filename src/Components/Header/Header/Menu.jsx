@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import NavList from "./NavList";
 import { NavLink, useLocation } from "react-router-dom";
 import SearchList from "../Search/SearchList";
@@ -11,9 +11,10 @@ export default function Menu() {
   const [search, setSearch] = useState(false);
   const [isScrollEnabled, setIsScrollEnabled] = useState(true);
   const [isSearchOverlayVisible, setIsSearchOverlayVisible] = useState(false);
+  const [isListFullyExpanded, setIsListFullyExpanded] = useState(false);
 
   const location = useLocation();
-  const items = ["Diamond jewelry", "jewelry", "news"];
+  const items = useMemo(() => ["Diamond jewelry", "jewelry", "news"], []);
 
   // Effect on menu bar
 
@@ -78,8 +79,20 @@ export default function Menu() {
     document.body.style.overflow = isScrollEnabled ? "auto" : "hidden";
   }, [isScrollEnabled]);
 
+  // Handle list fully expanded
+  useEffect(() => {
+    if (showList) {
+      const timer = setTimeout(() => {
+        setIsListFullyExpanded(true);
+      }, 500); // Adjust the delay time as needed
+      return () => clearTimeout(timer);
+    } else {
+      setIsListFullyExpanded(false);
+    }
+  }, [showList]);
+
   return (
-    <div className="absolute z-10 w-full h-[3em]">
+    <div className="absolute z-10 w-full h-[3em] ">
       {/* List menu */}
       <div onMouseLeave={handleMouseLeave} className="group">
         <ul
@@ -92,7 +105,7 @@ export default function Menu() {
           {items.map((item, index) => (
             <li
               key={index}
-              className={`relative z-10 list-link mb-3 hover:font-semibold pr-8 cursor-pointer ${
+              className={`relative Mfont z-10 list-link mb-3 hover:font-semibold pr-8 cursor-pointer ${
                 showList && currentItem === item ? "active" : "unactive"
               }`}
               onMouseEnter={() => handleMouseEnter(index)}
@@ -102,7 +115,7 @@ export default function Menu() {
           ))}
           <NavLink
             to="/DiamonPrice"
-            className="relative z-10 list-link mb-3 pb-1 hover:font-semibold pr-8 cursor-pointer"
+            className="relative z-10 list-link mb-3 Mfont pb-1 hover:font-semibold pr-8 cursor-pointer"
             activeclassname="font-bold"
             onMouseEnter={() => {
               handleMouseLeave();
@@ -113,7 +126,7 @@ export default function Menu() {
           </NavLink>
           <NavLink
             to="/DiamonKnow"
-            className="relative z-10 list-link mb-3 pb-1 hover:font-semibold pr-8 cursor-pointer"
+            className="relative z-10 list-link mb-3 Mfont pb-1 hover:font-semibold pr-8 cursor-pointer"
             activeclassname="font-bold"
             onMouseEnter={() => setSearch(false)}
           >
@@ -121,7 +134,7 @@ export default function Menu() {
           </NavLink>
           <NavLink
             to="/JewelryKnow"
-            className="relative z-10 list-link mb-3 pb-1 hover:font-semibold pr-8 cursor-pointer"
+            className="relative z-10 list-link mb-3 Mfont pb-1 hover:font-semibold pr-8 cursor-pointer"
             activeclassname="font-bold"
             onMouseEnter={() => setSearch(false)}
           >
@@ -129,7 +142,7 @@ export default function Menu() {
           </NavLink>
           <NavLink
             to="/Intro"
-            className="relative z-10 list-link mb-3 pb-1 hover:font-semibold pr-8 cursor-pointer"
+            className="relative z-10 list-link Mfont mb-3 pb-1 hover:font-semibold pr-8 cursor-pointer"
             activeclassname="font-bold"
             onMouseEnter={() => setSearch(false)}
           >
@@ -138,9 +151,9 @@ export default function Menu() {
           {/* Search */}
           <div
             onClick={handleSearchButtonClick}
-            className="h-[50%] mr-8 border-l-2 border-l-gray-600 cursor-pointer"
+            className="h-[50%] ml-2 mr-8 border-l-2 border-l-gray-600 cursor-pointer"
           >
-            <div className="pl-5">
+            <div className="pl-8">
               {search && isSearchOverlayVisible ? (
                 <div className="hover:text-red-500 scale-150 translate-y-1">
                   <ion-icon name="close-outline"></ion-icon>
@@ -168,6 +181,7 @@ export default function Menu() {
           } ${
             onScroll ? "fixed" : "absolute"
           } transition-all duration-500 pointer-events-auto`}
+          onTransitionEnd={() => setIsListFullyExpanded(showList)}
         >
           <div className={``}>
             <NavList currentItem={currentItem} />
@@ -176,10 +190,10 @@ export default function Menu() {
         {/* Overlay */}
         <div
           className={`-z-10 top-14 bg-black w-screen h-screen ${
-            overlay ? "bg-opacity-40" : "bg-opacity-0"
+            overlay && isListFullyExpanded ? "bg-opacity-40" : "bg-opacity-0"
           } ${
             onScroll ? "fixed" : "absolute"
-          }  transition-all duration-700 pointer-events-none`}
+          }  transition-all duration-300 pointer-events-none`}
         ></div>
       </div>
     </div>

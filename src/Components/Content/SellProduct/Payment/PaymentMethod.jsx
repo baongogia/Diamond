@@ -1,11 +1,73 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import CreditCard from "./CreditCard";
+import { CartContext } from "../../../Header/Header/Cart/CartContext";
+import Paypal from "./Paypal";
+import { PaymentContext } from "./PaymentContext";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../../Header/Login/UserContext";
+import { OrderContext } from "../Order/OrderContext";
+
 export default function PaymentMethod() {
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const { cartItems, clearCart } = useContext(CartContext);
+  const { setOrder } = useContext(OrderContext);
+  const { userData } = useContext(UserContext);
+  const { paymentMethod, setPaymentMethod } = useContext(PaymentContext);
+  const createOrder = async () => {
+    const orderData = {
+      Username: userData.Username,
+      OrderDate: new Date().toISOString(),
+      PaymentMethod: paymentMethod,
+      Products: cartItems.map((item) => ({
+        ProductID: item.productID,
+        ProductName: item.name,
+        CustomizedSize: item.size,
+        Quantity: item.quantity,
+      })),
+      Deposits: 0,
+    };
+
+    try {
+      const response = await fetch(
+        "https://localhost:7292/api/Order/createorder",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setOrder(result);
+      console.log("Order created successfully:", result);
+      clearCart();
+    } catch (error) {
+      console.error("There was an error creating the order:", error);
+    }
+  };
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const halfSubtotal = subtotal / 2;
+  const deposit = halfSubtotal.toLocaleString("en-US");
 
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
   };
+  const navigate = useNavigate();
+  const handlePaymentSuccess = (details) => {
+    console.log("Payment Successful:", details);
+    clearCart();
+    createOrder();
+    navigate("/OrderSuccess"); // Chuyển đến trang thanh toán thành công
+  };
+
   return (
     <div className="mt-10 font-serif">
       <div className="text uppercase">Payment method</div>
@@ -16,9 +78,8 @@ export default function PaymentMethod() {
             <input
               type="radio"
               name="pay"
-              value="card"
-              id=""
-              checked={paymentMethod === "card"}
+              value="Card"
+              checked={paymentMethod === "Card"}
               onChange={handlePaymentMethodChange}
               className=""
             />
@@ -33,10 +94,10 @@ export default function PaymentMethod() {
         {/* Credit Card form */}
         <div
           className={`${
-            paymentMethod === "card" ? "" : "hidden"
+            paymentMethod === "Card" ? "" : "hidden"
           } -translate-y-4 transition-all duration-300 ease-in-out`}
         >
-          <CreditCard />
+          <CreditCard amount={subtotal} />
         </div>
         {/* PayPal */}
         <div className="relative flex items-center justify-between w-[80%] mb-3">
@@ -44,29 +105,18 @@ export default function PaymentMethod() {
             <input
               type="radio"
               name="pay"
-              value="paypal"
-              id=""
-              checked={paymentMethod === "paypal"}
+              value="PayPal"
+              checked={paymentMethod === "PayPal"}
               onChange={handlePaymentMethodChange}
               className=""
             />
           </div>
-
-          {paymentMethod === "paypal" ? (
-            <a
-              href="https://www.paypal.com/signin?locale.x=vi_VN"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-yellow-500 px-3 rounded-lg h-14 flex justify-center items-center cursor-pointer"
-            >
+          {paymentMethod === "PayPal" ? (
+            <div className="w-full ml-10 px-3 rounded-lg mt-8 mb-2 h-16 flex justify-center items-center cursor-pointer">
               <div className="">
-                <img
-                  src="https://cdn.iconscout.com/icon/free/png-256/free-paypal-58-711793.png?f=webp"
-                  alt="PayPal"
-                  className="w-full"
-                />
+                <Paypal amount={subtotal} onSuccess={handlePaymentSuccess} />
               </div>
-            </a>
+            </div>
           ) : (
             <div className="w-3/4 flex items-center justify-between">
               <div className="w-1/3">
@@ -78,14 +128,14 @@ export default function PaymentMethod() {
             </div>
           )}
         </div>
-        {/* When Recived */}
+        {/* When Received */}
         <div className="flex items-center justify-between w-[80%]">
           <div className="w-1/4">
             <input
               type="radio"
-              value="recived"
+              value="Received"
               name="pay"
-              checked={paymentMethod === "recived"}
+              checked={paymentMethod === "Received"}
               onChange={handlePaymentMethodChange}
               id=""
               className=""
@@ -99,14 +149,13 @@ export default function PaymentMethod() {
           </div>
           <div className="w-1/2">
             <label htmlFor="Recieved" className="-translate-x-4">
-              Recieved
+              Received
             </label>
           </div>
         </div>
-
         <div
           className={`${
-            paymentMethod === "recived" ? "" : "hidden"
+            paymentMethod === "Received" ? "" : "hidden"
           } w-[40vw] h-[25vh] mt-4 flex items-center`}
         >
           <div
@@ -122,17 +171,14 @@ export default function PaymentMethod() {
             </div>
             <div className="">
               <div className="text">Product: LOVE BRACELET</div>
-              <div className="text">Cost: 100,000$</div>
+              <div className="text">Cost: {deposit}</div>
             </div>
-            <div className="w-full h-10 bg-red-400 rounded-full flex justify-center items-center">
-              <div className="text text-white uppercase">
-                Status: Pending...
-              </div>
+            <div className="w-full h-10 bg-green-400 cursor-pointer hover:bg-opacity-85 rounded-full flex justify-center items-center">
+              <div className="text text-white uppercase">Pay all</div>
             </div>
           </div>
         </div>
       </div>
-      {/* Rule */}
       <div className="">
         For further information about how we use your personal information,
         please see our Privacy Policy.

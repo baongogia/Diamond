@@ -22,7 +22,7 @@ export default function FooterList() {
           <li className="text mb-3">our company</li>
           {footerLink("find a boutique")}
           {footerLink("carrer")}
-          {footerLink("CARTIER AND CORPORATE SOCIAL RESPONSIBILITY")}
+          {footerLink("ETERNITY AND CORPORATE SOCIAL RESPONSIBILITY")}
           {footerLink("CREDITS")}
         </ul>
         <ul className="font-sans flex flex-col justify-between h-[40vh] mt-10 w-[80%]">

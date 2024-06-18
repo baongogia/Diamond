@@ -37,7 +37,7 @@ export default function OrderSuccess() {
           </NavLink>
         </div>
       </div>
-
+      {/* Animation */}
       <Confetti
         drawShape={(ctx) => {
           ctx.beginPath();

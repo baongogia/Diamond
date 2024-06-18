@@ -5,7 +5,9 @@ export default function ShoppingFooter() {
     <div className="w-screen h-[35vh] flex justify-around items-center">
       <div className="w-[90%] h-full flex justify-between items-start border-t-[0.1em] border-t-black border-opacity-20">
         <div className="mt-10 w-[40%] mr-4">
-          <div className="text mb-6 text-[1.2em]">COMPLIMENTARY SHIPPING & RETURNS</div>
+          <div className="text mb-6 text-[1.2em]">
+            COMPLIMENTARY SHIPPING & RETURNS
+          </div>
           <div className="font-serif mb-4 text-[0.9em]">
             We offer you several shipping options and the possibility to return
             or exchange your purchased creations.
@@ -24,17 +26,23 @@ export default function ShoppingFooter() {
               alt=""
             />
           </div>
-          <div className="font-serif text-[0.9em] mt-2 mb-2">All transactions are safe and secure.</div>
-          <div className="font-serif title-link h-10 w-[10em]">See More Information</div>
+          <div className="font-serif text-[0.9em] mt-2 mb-2">
+            All transactions are safe and secure.
+          </div>
+          <div className="font-serif title-link h-10 w-[10em]">
+            See More Information
+          </div>
         </div>
 
         <div className="mt-10">
           <div className="text text-[1.2em] mb-6">AUTHENTIC GUARANTEE</div>
           <div className="font-serif mb-4 text-[0.9em] w-[90%]">
-            Cartier guarantees the authenticity of all products purchased
-            through Cartier online.
+            Eternity guarantees the authenticity of all products purchased
+            through Eternity online.
           </div>
-          <div className="font-serif title-link h-10 w-[7em]">Discover more</div>
+          <div className="font-serif title-link h-10 w-[7em]">
+            Discover more
+          </div>
         </div>
       </div>
     </div>

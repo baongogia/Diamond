@@ -1,21 +1,23 @@
 import React from "react";
 
-export default function ShopingBagItems() {
+export default function ShopingBagItems({ item }) {
   return (
     <div className="relative w-full mt-8 h-[50vh] bg-gray-500 bg-opacity-5 overflow-hidden">
       <div
         style={{
-          backgroundImage: `url('https://www.cartier.com/dw/image/v2/BGTJ_PRD/on/demandware.static/-/Sites-cartier-master/default/dw4c31d446/images/large/c694697eb0fe59438264df232a5bb04c.png?sw=250&sh=250&sm=fit&sfrm=png')`,
+          backgroundImage: `url(${item.image})`,
         }}
         className="absolute top-8 left-6 w-1/3 h-[60%] bg-cover bg-center bg-no-repeat"
       ></div>
       <div className="absolute top-8 right-14 w-[55%] h-full">
         <div className="w-full flex justify-between">
-          <div className="text uppercase text-[1.2em]">Love Bracelet</div>
-          <div className="text uppercase text-[1.2em]">100,000$</div>
+          <div className="text uppercase text-[1.2em]">{item.name}</div>
+          <div className="text uppercase text-[1.2em]">
+            {parseFloat(item.price).toFixed(2)}$
+          </div>
         </div>
         <div className="font-serif mt-3">Yellow gold</div>
-        <div className="mt-3">Size: 16</div>
+        <div className="mt-3">Size: {item.size}</div>
         <div className="flex font-serif mt-3">
           <div className="title-link h-10">Add Another Items</div>
           <div className="ml-8 title-link h-10">Move to Wishlist</div>

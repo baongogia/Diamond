@@ -2,35 +2,7 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import ProductListItems from "./ProductListItems";
 import { RingLoader } from "react-spinners";
-
-export const fetchData = async (url, setData) => {
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    setData(data.results);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const fetchData2 = async (url, setData) => {
-  fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      setData(data);
-    })
-    .catch((error) => {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
-    });
-};
+import { useNavigate } from "react-router-dom";
 
 export default function ListItems({ titles }) {
   const [data, setData] = useState(null);
@@ -38,25 +10,30 @@ export default function ListItems({ titles }) {
   const [activeStates, setActiveStates] = useState(
     Array(titles.length).fill(false)
   );
-  const [apiUrl, setApiUrl] = useState("http://localhost:3001/api/products");
+  const [apiUrl, setApiUrl] = useState(
+    "https://localhost:7292/api/Products/Category/Rings"
+  );
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const fetchData = async (url, setData, setLoading) => {
+    try {
+      setLoading(true);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setData(data);
+    } catch (err) {
+      console.error("There has been a problem with your fetch operation:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetch(apiUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      });
+    fetchData(apiUrl, setData, setLoading);
   }, [apiUrl]);
 
   const handleMouseEnter = (index) => {
@@ -64,20 +41,24 @@ export default function ListItems({ titles }) {
     let newCategory;
     switch (index) {
       case 0:
-        newApiUrl = "http://localhost:3001/api/products";
-        newCategory = "products";
+        newApiUrl = "https://localhost:7292/api/Products/Category/Rings";
+        newCategory = "Rings";
         break;
       case 1:
-        newApiUrl = "http://localhost:3001/api/ring";
-        newCategory = "ring";
+        newApiUrl = "https://localhost:7292/api/Products/Category/Earrings";
+        newCategory = "Earrings";
         break;
       case 2:
-        newApiUrl = "http://localhost:3001/api/earing";
-        newCategory = "earing";
+        newApiUrl = "https://localhost:7292/api/Products/Category/Bracelets";
+        newCategory = "Bracelets";
+        break;
+      case 3:
+        newApiUrl = "https://localhost:7292/api/Products/Category/Necklaces";
+        newCategory = "Necklaces";
         break;
       default:
-        newApiUrl = "http://localhost:3001/api/products";
-        newCategory = "products";
+        newApiUrl = "";
+        newCategory = "";
     }
     if (newApiUrl !== apiUrl) {
       setApiUrl(newApiUrl);
@@ -92,18 +73,22 @@ export default function ListItems({ titles }) {
 
   useEffect(() => {
     setActiveStates(titles.map((title, index) => index === 0));
-    setCategory("products");
+    setCategory("Rings");
   }, [titles]);
 
   return (
     <div className="absolute top-8 w-[90%] h-[85%] flex flex-col justify-center items-center">
       {/* Nav list */}
-      <ul className="font-sans uppercase flex justify-around w-[77%] mt-14 border-b-[0.1em] border-b-black border-opacity-30 ">
+      {/* data-aos="fade-zoom-in"
+     data-aos-easing="ease-in-back"
+     data-aos-delay="300"
+     data-aos-offset="0" */}
+      <ul className=" uppercase flex justify-around w-[77%] mt-14 border-b-[0.1em] border-b-black border-opacity-30 ">
         {titles.map((title, index) => (
           <li
             key={title}
             onMouseEnter={() => handleMouseEnter(index)}
-            className={`relative z-10 list-link hover:font-semibold pr-4 cursor-pointer whitespace-nowrap  ${
+            className={`relative z-10 Mfont list-link hover:font-semibold pr-4 cursor-pointer whitespace-nowrap  ${
               activeStates[index] ? "active" : "unactive"
             }`}
           >
@@ -113,13 +98,17 @@ export default function ListItems({ titles }) {
       </ul>
       {/* Items */}
       <div className={`w-[80%] mt-5`}>
-        {data !== null ? (
+        {loading ? (
+          <div className="w-full h-[20vh] flex justify-center items-center">
+            <RingLoader color="#54cc26" />
+          </div>
+        ) : data ? (
           <Slider {...settings}>
             {data.map((list) => (
               <ProductListItems
-                key={list.id}
-                img={list.image}
-                title={list.name}
+                key={list.CategoryId}
+                img={list.Image}
+                title={list.ProductName}
                 category={category}
               />
             ))}
@@ -132,9 +121,7 @@ export default function ListItems({ titles }) {
       </div>
       {/* Link shop */}
       <div
-        onClick={() =>
-          (window.location.href = `/allitems?category=${category}`)
-        }
+        onClick={() => navigate(`/AllItems/${category}`)}
         className="absolute title-link h-10 mb-3 cursor-pointer font-serif -bottom-8"
       >
         View all

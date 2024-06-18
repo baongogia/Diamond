@@ -5,7 +5,6 @@ import { RingLoader } from "react-spinners";
 import Slider from "react-slick";
 
 export default function SearchList() {
-  const API_KEY = "97383386589c92be5ea03bd04fb80db8";
   const [searchQuery, setSearchQuery] = useState("");
   const [timeoutId, updateTimeoutId] = useState();
   const [productList, setProductList] = useState(null);
@@ -13,7 +12,9 @@ export default function SearchList() {
 
   const fetchData = async (searchString) => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/products`);
+      const response = await axios.get(
+        `https://localhost:7292/api/Products/ProductName/${searchString}`
+      );
       setProductList(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -46,12 +47,12 @@ export default function SearchList() {
     const { onClick } = props;
     return (
       <div
-        className={`absolute z-10 top-40 -right-12 ${
+        className={`absolute z-10 top-40 -right-14 ${
           currentSlide >= totalSlides - 3 ? "opacity-0" : "opacity-100"
         }`}
       >
         <button onClick={onClick}>
-          <div className="bg-green-500 flex justify-center items-center p-4 rounded-full">
+          <div className="border border-green-700 text-green-700 hover:bg-green-300 flex justify-center items-center p-4 rounded-full">
             <ion-icon name="chevron-forward-outline"></ion-icon>
           </div>
         </button>
@@ -63,12 +64,12 @@ export default function SearchList() {
     const { onClick } = props;
     return (
       <div
-        className={`absolute z-10 top-40 -left-12 ${
+        className={`absolute z-10 top-40 -left-14 ${
           currentSlide === 0 ? "opacity-0" : "opacity-100"
         }`}
       >
         <button onClick={onClick}>
-          <div className="bg-green-500 flex justify-center items-center p-4 rounded-full">
+          <div className="border border-green-700 text-green-700 hover:bg-green-300 flex justify-center items-center p-4 rounded-full">
             <ion-icon name="chevron-back-outline"></ion-icon>
           </div>
         </button>
@@ -99,21 +100,21 @@ export default function SearchList() {
       </div>
       {/* Search product list */}
       <div
-        className={`pl-14 w-full h-screen overflow-hidden bg-white flex justify-between ${
+        className={`pl-20 w-full h-screen overflow-hidden bg-white flex justify-between ${
           productList !== null ? "" : "hidden"
         } ${searchQuery === "" ? "hidden" : ""}`}
       >
         {productList !== null ? (
-          <Slider className="w-2/3" {...settings}>
+          <Slider className="w-[68%]" {...settings}>
             {productList.map((product) => (
               <ProductCard
                 key={product.id}
-                id={product.id}
-                img={product.image}
-                hovimg={product.image}
-                name={product.name}
-                material={"white gold, red diamond"}
-                price={product.price}
+                id={product.ProductId}
+                img={product.Image}
+                hovimg={product.Image}
+                name={product.ProductName}
+                material={product.Material}
+                price={parseFloat(product.ProductPrice).toFixed(2)}
                 mini={false}
               />
             ))}

@@ -1,7 +1,23 @@
 import React from "react";
-import { Input } from "../../../Header/Login/RegisterForm";
 
 export default function PayInfo() {
+  const Input = ({ type, label, placeholder }) => {
+    return (
+      <div className="mb-8">
+        <label className="block">
+          <span className="block text-sm text-zinc-700 opacity-60">
+            {label}
+          </span>
+          <input
+            type={type}
+            required
+            placeholder={placeholder}
+            className="peer outline-none border-b-[0.1em] border-b-black bg-zinc-300 bg-opacity-0 w-full h-[2em]"
+          />
+        </label>
+      </div>
+    );
+  };
   return (
     <div className="ml-8 mt-8 w-[55%]">
       <div className="w-full mb-4">
@@ -22,10 +38,10 @@ export default function PayInfo() {
           <br></br>
         </div>
       </div>
-      {Input("text", "First Name", "GIA")}
-      {Input("text", "Last Name", "BAO")}
-      {Input("text", "", "Address Line 1")}
-      {Input("text", "", "Address Line 2")}
+      <Input type="text" label="First Name" placeholder="GIA" />
+      <Input type="text" label="Last Name" placeholder="BAO" />
+      <Input type="text" label="Address Line 1" placeholder="Address Line 1" />
+      <Input type="text" label="Address Line 2" placeholder="Address Line 2" />
       <div className="-mt-4 mb-2">
         <label className="font-serif text-zinc-500">Country</label>
         <input
@@ -40,9 +56,9 @@ export default function PayInfo() {
         </datalist>
       </div>
 
-      {Input("text", "", "City")}
-      {Input("text", "", "State")}
-      {Input("text", "", "Zip Code")}
+      <Input type="text" label="City" placeholder="City" />
+      <Input type="text" label="State" placeholder="State" />
+      <Input type="text" label="Zip Code" placeholder="Zip Code" />
     </div>
   );
 }

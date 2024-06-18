@@ -7,6 +7,10 @@ import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserProvider } from "./Components/Header/Login/UserContext";
 import { CartProvider } from "./Components/Header/Header/Cart/CartContext";
+import { OrderProvider } from "./Components/Content/SellProduct/Order/OrderContext";
+import { PaymentProvider } from "./Components/Content/SellProduct/Payment/PaymentContext";
+import { SortingProvider } from "./Components/Content/SellProduct/Sort/SortingContext";
+import { DataProvider } from "./Components/Content/SellProduct/Sort/DataContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,9 +18,17 @@ root.render(
     <React.StrictMode>
       <BrowserRouter>
         <CartProvider>
-          <UserProvider>
-            <App />
-          </UserProvider>
+          <OrderProvider>
+            <PaymentProvider>
+              <UserProvider>
+                <SortingProvider>
+                  <DataProvider>
+                    <App />
+                  </DataProvider>
+                </SortingProvider>
+              </UserProvider>
+            </PaymentProvider>
+          </OrderProvider>
         </CartProvider>
       </BrowserRouter>
     </React.StrictMode>

@@ -8,7 +8,7 @@ export default function News() {
         <ul className="uppercase flex flex-col justify-between h-[34vh] translate-y-[26%]">
           <div className="text text-[1.2em]">stories</div>
           {footerLink("news")}
-          {footerLink("cartier party")}
+          {footerLink("Eternity party")}
           {footerLink("encounter")}
           {footerLink("know how")}
           {footerLink("the maison")}
@@ -18,12 +18,12 @@ export default function News() {
       <div className="">
         <ul className="uppercase flex flex-col justify-between h-[40vh] translate-y-[21%]">
           <div className="text text-[1.2em]">commitments and culture</div>
-          {footerLink("fondation cartier pour l'art contemporain")}
-          {footerLink("cartier collection")}
+          {footerLink("fondation Eternity pour l'art contemporain")}
+          {footerLink("Eternity collection")}
           {footerLink("encounters")}
-          {footerLink("cartier women's initiative")}
+          {footerLink("Eternity women's initiative")}
           {footerLink("musical")}
-          {footerLink("cartier philanthropy")}
+          {footerLink("Eternity philanthropy")}
           {footerLink("commitments to our people")}
           {footerLink("all commitments and culture")}
         </ul>

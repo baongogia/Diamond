@@ -2,14 +2,20 @@
 body {
   overflow-x: hidden !important;
   scroll-behavior: smooth !important;
-  /* transform: translateX(-5px); */
 }
-
 /* Font */
+/* For uppercase */
 .text {
   font-family: "Lexend", sans-serif;
 }
-
+/* For navbar */
+.Mfont {
+  font-family: "Karla";
+}
+/* For logo */
+.logo {
+  font-family: "Le Major";
+}
 /* Hover CSS */
 .list-link {
   position: relative;
@@ -258,4 +264,44 @@ body {
 
 .checkbox-label:hover .custom-checkbox {
   border-color: #888;
+}
+/* Hide scrool */
+/* Custom scrollbar styles */
+.hide-scrollbar {
+  overflow-y: scroll; /* Enable vertical scrolling */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.product-transition-enter {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.product-transition-enter-active {
+  max-height: 1000px; /* Max height to ensure content fits */
+  opacity: 1;
+  transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
+}
+
+.product-transition-exit {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+.product-transition-exit-active {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 }

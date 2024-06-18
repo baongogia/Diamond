@@ -52,7 +52,7 @@ export default function ProductServices() {
             className="tracking-wide mb-3 text-start font-serif"
           >
             We offer different delivery options. Choose the one you prefer at
-            the checkout. You may return or exchange your Cartier creation
+            the checkout. You may return or exchange your Eternity creation
             within 30 days.
           </div>
           <div className="flex justify-between w-[40%]">

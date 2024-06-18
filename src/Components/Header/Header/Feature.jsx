@@ -3,20 +3,33 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../Login/UserContext";
 import Cart from "./Cart/Cart";
 import { CartContext } from "./Cart/CartContext";
+
 export default function Feature() {
   const { showCart2, setShowCart: setShowCartContext } =
     useContext(CartContext);
   const [showCart, setShowCart] = useState(showCart2);
   const [overlay, setOverlay] = useState(false);
+  const [isCartFullyExpanded, setIsCartFullyExpanded] = useState(false);
   const { isLoggedIn, userData } = useContext(UserContext);
 
   useEffect(() => {
     setShowCart(showCart2);
   }, [showCart2]);
 
+  useEffect(() => {
+    if (showCart) {
+      const timer = setTimeout(() => {
+        setIsCartFullyExpanded(true);
+      }, 300); // Adjust the delay time to match the transition duration
+      return () => clearTimeout(timer);
+    } else {
+      setIsCartFullyExpanded(false);
+    }
+  }, [showCart]);
+
   return (
     <div className={`${isLoggedIn ? "w-[17%]" : "w-[13%]"} pt-4 pr-8`}>
-      {/* Feature */}
+      {/* Feature list */}
       {isLoggedIn ? (
         <ul className="flex justify-between items-center text-[1.2em]">
           <Link
@@ -24,7 +37,7 @@ export default function Feature() {
             className={`cursor-pointer flex hover:opacity-55 text-red-500`}
           >
             <div className="font-mono text-[0.7em] mr-2 text-black uppercase">
-              {userData.given_name}
+              {userData.given_name || userData.Username}
             </div>
             <ion-icon name="person-outline"></ion-icon>
           </Link>
@@ -76,22 +89,22 @@ export default function Feature() {
       {/* Shopping Cart */}
       <div
         onMouseLeave={() => {
-          setShowCartContext(false); // Use context to update showCart state
+          setShowCartContext(false);
           setOverlay(false);
         }}
         className={`fixed z-50 top-0 right-0 w-[33vw] bg-white ${
           showCart ? "translate-x-0" : "translate-x-full"
-        } transition-all duration-700 pointer-events-auto`}
+        } transition-all duration-500 pointer-events-auto`}
+        onTransitionEnd={() => setIsCartFullyExpanded(showCart)}
       >
         <Cart setShowCart={setShowCart} setOverlay={setOverlay} />
       </div>
+      {/* Overlay */}
       <div
-        className={`fixed top-0 left-0 bg-black bg-opacity-50 w-[90%] h-screen pb-10 ${
-          overlay ? "opacity-100" : "opacity-0"
-        } transition-opacity duration-700 pointer-events-none`}
-      >
-        <div className=""></div>
-      </div>
+        className={`fixed top-0 left-0 bg-black w-screen h-screen pb-10 ${
+          overlay && isCartFullyExpanded ? "bg-opacity-40" : "bg-opacity-0"
+        } transition-all duration-200 pointer-events-none`}
+      ></div>
     </div>
   );
 }

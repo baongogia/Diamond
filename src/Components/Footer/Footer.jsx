@@ -29,17 +29,17 @@ export default function Footer() {
       {/* Logo */}
       <div className="w-screen h-[6em] flex justify-center items-center">
         <img
-          src="https://www.cartier.com/on/demandware.static/-/Library-Sites-CartierSharedLibrary-BGTJ/default/dw2ebd423e/CWI-Logo-black-424x190px.png"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfQKzLQdB9YfdlZXmfFGHXJPTuz849jMo9dvQU_zHVVWdlKGpa8ZMLKPY_NSWDL7Ej6oM&usqp=CAU"
+          alt=""
+          className="w-[8%] mr-12 mt-4 relative -z-50"
+        />
+        <img
+          src="https://www.the-infinity-group.com/wp-content/uploads/2015/09/logo_black_nav.png"
           alt=""
           className="w-[8%] mr-16"
         />
         <img
-          src="https://www.cartier.com/on/demandware.static/-/Library-Sites-CartierSharedLibrary-BGTJ/default/dw38c3e5f0/cartier_partner_logo_fondation.png"
-          alt=""
-          className="w-[8%] mr-16"
-        />
-        <img
-          src="https://www.cartier.com/on/demandware.static/-/Library-Sites-CartierSharedLibrary-BGTJ/default/dwa7ae8ebe/Philanthropy.png"
+          src="https://iconape.com/wp-content/png_logo_vector/eternity.png"
           alt=""
           className="w-[8%]"
         />

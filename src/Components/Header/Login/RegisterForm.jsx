@@ -1,5 +1,8 @@
-import React from "react";
-export const Input = (type, label, placeholder) => {
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+export const Input = ({ type, label, placeholder, value, onChange, name }) => {
   return (
     <div className="">
       <label className="block mb-8">
@@ -9,43 +12,110 @@ export const Input = (type, label, placeholder) => {
           required
           placeholder={placeholder}
           className="peer ... outline-none border-b-[0.1em] border-b-black bg-zinc-300 bg-opacity-0 w-full h-[2em]"
+          value={value}
+          onChange={onChange}
+          name={name}
         />
       </label>
     </div>
   );
 };
+
 export default function RegisterForm() {
+  const naviagte = useNavigate();
+  const [formData, setFormData] = useState({
+    title: "",
+    firstName: "",
+    lastName: "",
+    day: "",
+    month: "",
+    year: "",
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Kiểm tra các điều kiện trước khi gửi
+    if (formData.password !== formData.confirmPassword) {
+      alert("Mật khẩu không khớp!");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "https://localhost:7292/api/Accounts/register",
+        formData
+      );
+      console.log("Registration successful!", response.data);
+      if (response) {
+        naviagte("/LoginPage");
+      }
+      // Thực hiện hành động sau khi đăng ký thành công (chuyển hướng, hiển thị thông báo, ...)
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
+  };
+
   return (
     <div className="w-2/3 h-full bg-zinc-300 bg-opacity-15">
       <div className="flex justify-center font-serif text-sm">
-        <div
-          className={`absolute top-10 font-serif flex items-center flex-col w-full `}
-        >
+        <div className="absolute top-10 font-serif flex items-center flex-col w-full">
           {/* Gender */}
-          <div className="w-1/4 mb-4 ">
+          <div className="w-1/4 mb-4">
             <label htmlFor="" className="text-zinc-700 opacity-60">
               Title
             </label>
             <div className="w-[70%] flex justify-between">
-              <input type="radio" name="choice" value="option1" />
-              <label htmlFor="option1">Mr</label>
-              <br></br>
-
-              <input type="radio" name="choice" value="option2" />
-              <label htmlFor="option2">Mrs</label>
-              <br></br>
-
-              <input type="radio" name="choice" value="option3" />
-              <label htmlFor="option3">Miss</label>
-              <br></br>
+              <input
+                type="radio"
+                name="title"
+                value="Mr"
+                onChange={handleChange}
+              />
+              <label htmlFor="Mr">Mr</label>
+              <input
+                type="radio"
+                name="title"
+                value="Mrs"
+                onChange={handleChange}
+              />
+              <label htmlFor="Mrs">Mrs</label>
+              <input
+                type="radio"
+                name="title"
+                value="Miss"
+                onChange={handleChange}
+              />
+              <label htmlFor="Miss">Miss</label>
             </div>
           </div>
 
-          <form className="w-1/4">
-            {/* Name */}
-            {Input("text", "First Name*", "GIA")}
-            {Input("text", "Last Name*", "BAO")}
-            {/* Date */}
+          <form className="w-1/4" onSubmit={handleSubmit}>
+            {Input({
+              type: "text",
+              label: "First Name*",
+              placeholder: "GIA",
+              value: formData.firstName,
+              onChange: handleChange,
+              name: "firstName",
+            })}
+            {Input({
+              type: "text",
+              label: "Last Name*",
+              placeholder: "BAO",
+              value: formData.lastName,
+              onChange: handleChange,
+              name: "lastName",
+            })}
+
             <div className="flex flex-col mb-3">
               <label
                 htmlFor="birthdate"
@@ -62,6 +132,8 @@ export default function RegisterForm() {
                   min="1"
                   max="31"
                   className="w-[25%] outline-none bg-zinc-300 bg-opacity-0"
+                  value={formData.day}
+                  onChange={handleChange}
                 />
                 <input
                   type="number"
@@ -71,6 +143,8 @@ export default function RegisterForm() {
                   min="1"
                   max="12"
                   className="w-[25%] outline-none bg-zinc-300 bg-opacity-0"
+                  value={formData.month}
+                  onChange={handleChange}
                 />
                 <input
                   type="number"
@@ -80,23 +154,46 @@ export default function RegisterForm() {
                   min="1900"
                   max="2023"
                   className="w-[25%] outline-none bg-zinc-300 bg-opacity-0"
+                  value={formData.year}
+                  onChange={handleChange}
                 />
               </div>
             </div>
-            {/* Email */}
-            {Input("text", "Email Address", "your@gmail.com")}
-            {Input("text", "Confirm Email", "your@gmail.com")}
-            {/* Password */}
-            {Input("password", "Password", "*****")}
-            {Input("password", "Confirm Password", "*****")}
-            {/* Languages */}
+
+            {Input({
+              type: "text",
+              label: "Username*",
+              placeholder: "your_username",
+              value: formData.username,
+              onChange: handleChange,
+              name: "username",
+            })}
+            {Input({
+              type: "password",
+              label: "Password*",
+              placeholder: "*****",
+              value: formData.password,
+              onChange: handleChange,
+              name: "password",
+            })}
+            {Input({
+              type: "password",
+              label: "Confirm Password*",
+              placeholder: "*****",
+              value: formData.confirmPassword,
+              onChange: handleChange,
+              name: "confirmPassword",
+            })}
+
             <label className="">Preferred Language</label>
             <input
               type="text"
-              name="myDataList"
+              name="preferredLanguage"
               list="myList"
               className="w-full outline-none bg-zinc-300 bg-opacity-0"
               placeholder="English"
+              value={formData.preferredLanguage}
+              onChange={handleChange}
             />
             <datalist id="myList">
               <option value="English"></option>
@@ -110,29 +207,24 @@ export default function RegisterForm() {
             <div className="">
               <input
                 type="checkbox"
-                id="vehicle1"
-                name="vehicle1"
-                value="Bike"
-                className=""
+                id="marketingConsent"
+                name="marketingConsent"
+                checked={formData.marketingConsent}
+                onChange={handleChange}
               />
-              <label htmlFor="vehicle1" className="ml-3">
+              <label htmlFor="marketingConsent" className="ml-3">
                 I would also like to receive marketing information about
-                Cartier’s products or services. We may send you this information
-                using email, text, telephone or post. We may also use your
-                information to deliver personalized messages or advertising on
-                social media or other digital platforms. You can ask us to stop
-                marketing at any time.
+                Eternity’s products or services.
               </label>
-              <br></br>
             </div>
-            {/* Create button */}
+
             <div className="w-full mt-10 flex justify-center items-center">
-              <div
-                className="bg-black text-center text-white w-full font-semibold px-4 py-2
-                 hover:bg-white hover:text-black border-black border-solid border-[0.1em] cursor-pointer transition-colors duration-500"
+              <button
+                type="submit"
+                className="bg-black text-center text-white w-full font-semibold px-4 py-2 hover:bg-white hover:text-black border-black border-solid border-[0.1em] cursor-pointer transition-colors duration-500"
               >
                 Create Account
-              </div>
+              </button>
             </div>
           </form>
         </div>

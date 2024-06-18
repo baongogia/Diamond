@@ -3,18 +3,18 @@ import ListItems from "./ListItems";
 import News from "./News";
 export default function NavList({ currentItem }) {
   const Jtitles = [
-    " necklace",
     " rings",
     " earrings",
     " bracelet",
+    " necklace",
     " watch face",
     " ring setting",
   ];
   const DJtitles = [
-    " necklace",
     " wedding rings",
     " earrings",
     " bracelet",
+    " necklace",
     " watch face",
     " ring setting",
   ];

@@ -23,6 +23,7 @@ function GGLogout() {
 
   const logOut = () => {
     localStorage.setItem("isLoggedIn", "false");
+    localStorage.removeItem("userData");
     googleLogout();
     goToHome();
     window.location.reload();

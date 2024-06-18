@@ -7,10 +7,10 @@ export default function HideFooter({ children }) {
 
   useEffect(() => {
     if (
-      location.pathname.startsWith("/CheckOutPage") ||
-      location.pathname.startsWith("/ReviewOrder") ||
-      location.pathname.startsWith("/OrderSuccess") ||
-      location.pathname.startsWith("/ShoppingBag")
+      location.pathname === "/CheckOutPage" ||
+      location.pathname === "/ReviewOrder" ||
+      location.pathname === "/OrderSuccess" ||
+      location.pathname === "/ShoppingBag"
     ) {
       setShowNav(false);
     } else {

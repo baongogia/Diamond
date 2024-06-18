@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import AOS from "aos";
 import OrderItem from "./OrderItem";
 
-export default function OrderDetailsItem() {
+export default function HistoryOrderDetailsItem({ product }) {
   useEffect(() => {
     AOS.init({
       once: true,
@@ -20,7 +20,11 @@ export default function OrderDetailsItem() {
           Order Details
         </div>
         <div className="h-1/2 overflow-auto">
-          <OrderItem />
+          {product.length > 0 ? (
+            product.map((item) => <OrderItem id={item.id} details={item} />)
+          ) : (
+            <div className=""></div>
+          )}
         </div>
         <div className="font-serif flex flex-col justify-between h-1/3">
           <div className="">Customer Name: Ngo Gia Bao</div>
