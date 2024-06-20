@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import NavList from "./NavList";
+import React, { useEffect, useState, useMemo } from "react";
+import NavList from "../Items/NavList";
 import { NavLink, useLocation } from "react-router-dom";
-import SearchList from "../Search/SearchList";
+import SearchList from "../../../Header/Search/SearchList";
 
 export default function Menu() {
   const [showList, setShowList] = useState(false);

@@ -97,7 +97,7 @@ export default function PaymentMethod() {
             paymentMethod === "Card" ? "" : "hidden"
           } -translate-y-4 transition-all duration-300 ease-in-out`}
         >
-          <CreditCard amount={subtotal} />
+          <CreditCard amount={subtotal - 0.05 * subtotal} />
         </div>
         {/* PayPal */}
         <div className="relative flex items-center justify-between w-[80%] mb-3">

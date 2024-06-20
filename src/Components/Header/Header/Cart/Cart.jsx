@@ -17,6 +17,7 @@ export default function Cart({ setShowCart, setOverlay }) {
 
   const handleLinkClick = (path) => {
     handleShow();
+    setShowCart(false);
     navigate(path);
   };
   return (
@@ -24,18 +25,21 @@ export default function Cart({ setShowCart, setOverlay }) {
       className={`relative w-[33vw] border-l-[0.1em] border-l-green-700 h-screen flex flex-col justify-center items-center`}
     >
       {/* Title */}
-      <div className="w-full h-[5em] border-b-[0.1em] border-t-green-700 border-opacity-40 flex justify-around items-center">
-        <div className="uppercase font-semibold text-[2em] tracking-wide">
-          Shopping cart
-        </div>
-        {/* Close */}
-        <div
-          onClick={handleShow}
-          className={`absolute right-5 top-0 text-[2.5em] cursor-pointer hover:opacity-50`}
-        >
-          <ion-icon name="close-outline"></ion-icon>
+      <div className="w-full max-h-[6em] py-3 border-b-[0.1em] border-t-green-700 border-opacity-40 flex justify-around items-center">
+        <div className="w-full flex justify-around items-center">
+          <div className="uppercase font-semibold text-[2em] tracking-wide">
+            Shopping cart
+          </div>
+          {/* Close Cart */}
+          <div
+            onClick={handleShow}
+            className={`absolute right-5 top-3 text-[2.5em] cursor-pointer hover:opacity-50`}
+          >
+            <ion-icon name="close-outline"></ion-icon>
+          </div>
         </div>
       </div>
+
       {/* Items */}
       <div className="w-[90%] h-[70vh] overflow-y-auto mt-8">
         {cartItems.length > 0 ? (
@@ -46,8 +50,8 @@ export default function Cart({ setShowCart, setOverlay }) {
       </div>
       {/* Check out */}
       {cartItems.length > 0 ? (
-        <div className=" mb-8 w-[90%] h-[20vh] flex flex-col justify-around border-t-[0.1em] border-t-green-900 border-opacity-10">
-          <div className="text text-[1.4em] uppercase flex w-full justify-between">
+        <div className="mb-8 w-[85%] h-[20vh] flex flex-col justify-evenly border-t-[0.1em] border-t-green-900 border-opacity-10">
+          <div className="text text-[1.3em] uppercase flex w-full justify-between">
             <div className="">subtotal</div>
             <div className="">${subtotal}</div>
           </div>

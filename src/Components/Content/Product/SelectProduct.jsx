@@ -233,7 +233,7 @@ export default function SelectProduct({ details }) {
       </div>
       {/* CIA */}
       <div
-        className={`absolute z-10 -top-6 -left-[40vw] w-[70vw] h-[80vh] border-green-700 border-[0.4em] border-double  ${
+        className={`absolute z-10 -top-3 -left-[40vw] w-[70vw] h-[80vh] border-green-700 border-[0.4em] border-double  ${
           showCer ? "opacity-100" : "opacity-0 pointer-events-none"
         } transform-style-preserve-3d ${
           isFlipped ? "" : "rotate-y-180"

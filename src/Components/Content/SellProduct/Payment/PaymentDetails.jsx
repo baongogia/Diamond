@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../../Header/Header/Cart/CartContext";
 import PaymentDetailsCard from "./PaymentDetailsCard";
@@ -14,6 +14,15 @@ export default function PaymentDetails({ title, linkto, pay }) {
 
   // Creater Order
   const { clearCart, cartItems } = useContext(CartContext);
+
+  useEffect(() => {
+    // Retrieve order from localStorage if available
+    const savedOrder = localStorage.getItem("order");
+    if (savedOrder) {
+      setOrder(JSON.parse(savedOrder));
+    }
+  }, [setOrder]);
+
   const createOrder = async () => {
     const orderData = {
       Username: userData.Username,
@@ -46,21 +55,20 @@ export default function PaymentDetails({ title, linkto, pay }) {
 
       const result = await response.json();
       setOrder(result);
+      localStorage.setItem("order", JSON.stringify(result));
       console.log("Order created successfully:", result);
       clearCart();
     } catch (error) {
       console.error("There was an error creating the order:", error);
     }
   };
+
   // Total
   const total = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const subtotal = total;
   const discount = total * 0.05;
   const finalPrice = total - discount;
 
@@ -68,7 +76,6 @@ export default function PaymentDetails({ title, linkto, pay }) {
   const handleClick = () => {
     if (title.toLowerCase() === "place your order") {
       createOrder();
-      clearCart();
     }
     navigate(`${linkto}`);
   };

@@ -1,6 +1,6 @@
 import React from "react";
 import ListItems from "./ListItems";
-import News from "./News";
+import News from "../Navbar/News";
 export default function NavList({ currentItem }) {
   const Jtitles = [
     " rings",

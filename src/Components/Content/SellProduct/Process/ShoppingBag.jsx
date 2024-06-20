@@ -3,7 +3,7 @@ import ShopingBagItems from "../Items/ShopingBagItems";
 import ShoppingFooter from "../../../Footer/ShoppingFooter";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../../Header/Header/Cart/CartContext";
-import Navbar from "../../../Header/Header/Navbar";
+import Navbar from "../../../Header/Header/Navbar/Navbar";
 
 export default function ShoppingBag() {
   const totalBillRef = useRef(null);

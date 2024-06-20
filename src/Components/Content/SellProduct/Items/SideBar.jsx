@@ -13,7 +13,7 @@ import { DataContext } from "../Sort/DataContext";
 export default function SideBar({ initialCategory }) {
   const { setSortOption } = useContext(SortingContext);
   const [caratWeight, setCaratWeight] = useState([0.75, 1.75]);
-  const { setDataFil, setApiUrl } = useContext(DataContext);
+  const { setApiUrl } = useContext(DataContext);
   const [filters, setFilters] = useState({
     Cut: [],
     Clarity: [],
@@ -24,7 +24,6 @@ export default function SideBar({ initialCategory }) {
     Material: [],
   });
   const isInitialLoad = useRef(true);
-
   useEffect(() => {
     if (initialCategory) {
       setFilters((prevFilters) => ({
@@ -33,7 +32,7 @@ export default function SideBar({ initialCategory }) {
       }));
     }
   }, [initialCategory]);
-
+  // Handle radio change
   const handleRadioChange = useCallback(
     (value) => {
       setSortOption(value);
@@ -44,20 +43,18 @@ export default function SideBar({ initialCategory }) {
   const handleSliderChange = useCallback((newValue) => {
     setCaratWeight(newValue);
   }, []);
-
+  // Handle checkbox change
   const handleCheckboxChange = useCallback((groupName, value) => {
     setFilters((prevFilters) => {
       const groupValues = prevFilters[groupName];
       const newValues = groupValues.includes(value)
-        ? // Uncheck the value if it's already checked
-          groupValues.filter((v) => v !== value)
-        : // Only allow one value to be selected in the group
-          [value];
+        ? groupValues.filter((v) => v !== value) // Uncheck the value if it's already checked
+        : [value]; // Only allow one value to be selected in the group
 
       return { ...prevFilters, [groupName]: newValues };
     });
   }, []);
-
+  // Create query
   const buildQuery = (caratWeight, filters) => {
     const params = {
       MinCaratWeight: caratWeight[0],
@@ -70,39 +67,21 @@ export default function SideBar({ initialCategory }) {
     };
     return new URLSearchParams(params).toString();
   };
-
-  const fetchData = useCallback(
-    async (query) => {
-      const apiUrl = `https://localhost:7292/api/Products?${query}`;
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setDataFil(data);
-        setApiUrl(apiUrl);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      }
-    },
-    [setDataFil]
-  );
-
+  // Set api url
   useEffect(() => {
     if (!isInitialLoad.current) {
       const query = buildQuery(caratWeight, filters);
-      fetchData(query);
+      setApiUrl(`https://localhost:7292/api/Products?${query}`);
     }
-  }, [caratWeight, filters, fetchData]);
+  }, [caratWeight, filters, setApiUrl]);
 
   useEffect(() => {
     if (isInitialLoad.current) {
       const query = buildQuery(caratWeight, filters);
-      fetchData(query);
+      setApiUrl(`https://localhost:7292/api/Products?${query}`);
       isInitialLoad.current = false;
     }
-  }, [fetchData]);
+  }, [setApiUrl]);
 
   return (
     <div className="relative w-[20%] border-t-[0.1em] border-t-black border-opacity-10">
@@ -146,13 +125,14 @@ export default function SideBar({ initialCategory }) {
                     width: 18,
                     backgroundColor: "green",
                     opacity: 100,
-                    display: "none",
                   },
                 ]}
                 railStyle={{ backgroundColor: "green", height: "8px" }}
               />
             </div>
-            <div className="mt-5">Weight: {caratWeight[0]}</div>
+            <div className="mt-5">
+              Carat Weight: {caratWeight[0]} - {caratWeight[1]}
+            </div>
           </div>
           {/* Cut */}
           <div className="text uppercase mt-5">Cut</div>

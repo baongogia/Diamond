@@ -16,6 +16,42 @@ body {
 .logo {
   font-family: "Le Major";
 }
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(90deg, #e72e00, #ddc701);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.blueneck {
+  background: linear-gradient(90deg, #1a1642, #09a0ae);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.greenneck {
+  background: linear-gradient(90deg, #005c14, #ecdd00);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.magic {
+  background: linear-gradient(90deg, #290f93, #66fae9);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.beauty {
+  background: linear-gradient(90deg, #9501d4, #1813a5);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vol {
+  background: linear-gradient(90deg, #c40909, #deb70b);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 /* Hover CSS */
 .list-link {
   position: relative;

@@ -47,14 +47,14 @@ export default function ProductCard({
 
       {/* Name */}
       <div
-        className={`text-center uppercase max-h-[3em] overflow-hidden ${
-          mini ? "w-[70%] max-h-[2.24em]" : "w-[90%]"
+        className={`text-center uppercase overflow-hidden ${
+          mini ? "w-[70%]" : "w-[90%]"
         } leading-5 mt-2`}
       >
         <p className="text">{name}</p>
       </div>
       {/* Material */}
-      <div className="mt-2 max-h-12  font-serif w-[80%] overflow-hidden text-center">
+      <div className="mt-2 max-h-12 font-serif w-[80%] overflow-hidden text-center">
         {material}
       </div>
       {/* Price */}

@@ -11,7 +11,6 @@ export default function ItemsList() {
   const { dataFil, setDataFil, apiUrl } = useContext(DataContext);
   const [loading, setLoading] = useState(true);
   const prevApiUrl = useRef("");
-
   const { sortOption } = useContext(SortingContext);
 
   // AOS
@@ -22,7 +21,7 @@ export default function ItemsList() {
       offset: 0,
     });
   }, []);
-
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -39,7 +38,7 @@ export default function ItemsList() {
         setLoading(false);
       }
     };
-
+    // Set loading when change api url
     if (apiUrl && apiUrl !== prevApiUrl.current) {
       fetchData();
       prevApiUrl.current = apiUrl;

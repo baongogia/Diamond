@@ -15,10 +15,13 @@ export default function OrderDetails() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
   const { paymentMethod } = useContext(PaymentContext);
+  const navigate = useNavigate();
+
   const Cancel = () => {
     setIsFlipped(!isFlipped);
     setShowCancel(!showCancel);
   };
+
   // Fetch Data
   useEffect(() => {
     fetch("https://localhost:7292/api/Products/Category/Necklaces")
@@ -38,6 +41,7 @@ export default function OrderDetails() {
         );
       });
   }, []);
+
   // AOS effect
   useEffect(() => {
     AOS.init({
@@ -45,8 +49,49 @@ export default function OrderDetails() {
       duration: 2000,
     });
   }, []);
+
+  // Retrieve order from localStorage on mount
+  useEffect(() => {
+    const savedOrder = localStorage.getItem("order");
+    if (savedOrder) {
+      setOrder(JSON.parse(savedOrder));
+    }
+  }, [setOrder]);
+
+  // Update localStorage whenever order state changes
+  useEffect(() => {
+    if (order) {
+      localStorage.setItem("order", JSON.stringify(order));
+    }
+  }, [order]);
+
+  // Fetch latest order data from the server
+  const fetchLatestOrder = async () => {
+    try {
+      const response = await axios.get(
+        `https://localhost:7292/api/Order/getOrderInfo?id=${order.OrderID}`
+      );
+      if (response.data) {
+        setOrder(response.data);
+        console.log({ response });
+      }
+    } catch (error) {
+      console.error("Failed to fetch latest order:", error);
+    }
+  };
+
+  // Fetch latest order data periodically
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (order) {
+        fetchLatestOrder();
+      }
+    }, 1000); // Fetch latest data every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [order]);
+
   // Cancel Product
-  const naviagte = useNavigate();
   const cancelProduct = async () => {
     try {
       const response = await axios.put(
@@ -54,14 +99,15 @@ export default function OrderDetails() {
       );
       console.log("Cancel successful!");
       if (response) {
-        naviagte("/");
+        navigate("/");
         setOrder(null);
+        localStorage.removeItem("order");
       }
     } catch (error) {
       console.error("Cancel failed:", error);
     }
   };
-  //
+
   const getCurrentStep = (status) => {
     switch (status) {
       case "Cancelled":
@@ -71,15 +117,19 @@ export default function OrderDetails() {
       case "Accepted":
         return 2;
       case "Deliverying":
+      case "Pending Delivery":
         return 3;
-      case "Complete":
+      case "Deliveried":
         return 4;
       default:
         return 0;
     }
   };
-
   const currentStep = getCurrentStep(order?.OrderStatus);
+
+  if (!order) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="mt-12">
       <div className="w-screen flex justify-around">
@@ -93,11 +143,15 @@ export default function OrderDetails() {
             <div className="text text-[1.4em] flex justify-between uppercase">
               <div className="text-green-800">
                 {" "}
-                {`Order Number: #${order.OrderID}`}
+                {`Order Number: #${order?.OrderID}`}
               </div>
               <div
                 onClick={Cancel}
-                className="text-[2em] h-0 -translate-y-3 translate-x-3 cursor-pointer hover:text-red-400"
+                className={`text-[2em] h-0 -translate-y-3 translate-x-3 cursor-pointer hover:text-red-400  ${
+                  currentStep >= 3 || currentStep >= 4 || currentStep === 0
+                    ? "hidden"
+                    : ""
+                }`}
               >
                 <ion-icon name="close-outline"></ion-icon>
               </div>
@@ -126,8 +180,8 @@ export default function OrderDetails() {
                 <div className="flex justify-around items-center w-[80%] mt-2">
                   <div
                     onClick={Cancel}
-                    className="bg-white text-center text-black w-[40%] font-semibold px-4 py-2 text uppercase
-                 hover:bg-red-400 hover:text-white border-black border-solid border-[0.08em] cursor-pointer transition-colors duration-500"
+                    className={`bg-white text-center text-black w-[40%] font-semibold px-4 py-2 text uppercase
+                 hover:bg-red-400 hover:text-white border-black border-solid border-[0.08em]  cursor-pointer transition-colors duration-500`}
                   >
                     cancel
                   </div>
@@ -249,19 +303,19 @@ export default function OrderDetails() {
               <div className="">Discount: {order.DiscountRate * 100}%</div>
               <div className="">Total: {order.FinalPrice.toFixed(2)}$</div>
               <div className="flex items-center">
-                <div className="">Payment: </div>
+                <div className="">Payment:</div>
                 <div
                   className={`${
-                    paymentMethod === "Card"
+                    order.Payment === "Card"
                       ? "bg-blue-400"
-                      : paymentMethod === "PayPal"
+                      : order.Payment === "PayPal"
                       ? "bg-yellow-400"
-                      : paymentMethod === "Received"
+                      : order.Payment === "Received"
                       ? "bg-green-800"
                       : ""
                   } rounded-md px-2 ml-2 text-white`}
                 >
-                  {paymentMethod}
+                  {order.Payment || paymentMethod}
                 </div>
               </div>
             </div>
@@ -311,6 +365,7 @@ export default function OrderDetails() {
     </div>
   );
 }
+
 const settings = {
   dots: false,
   infinite: false,

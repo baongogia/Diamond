@@ -1,62 +1,95 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { RingLoader } from "react-spinners";
 
 export default function DiamondPrice() {
-  const col = (title, additionalClasses = "") => {
+  const col = (title) => {
     return (
       <th
         scope="col"
-        className={`text-xs text-black font-medium px-6 py-3 text-left uppercase tracking-wider ${additionalClasses}`}
+        className={`text-xs text-black font-medium px-6 py-3 text-left uppercase tracking-wider`}
       >
         {title}
       </th>
     );
   };
-
-  const row = (data, additionalClasses = "") => {
+  const row = (data, unit) => {
     return (
-      <td
-        className={`text-sm text-black px-6 py-4 whitespace-nowrap ${additionalClasses}`}
-      >
+      <td className={`text-sm text-black px-6 py-4 whitespace-nowrap`}>
         {data}
+        {unit}
       </td>
     );
   };
+  const [loading, setLoading] = useState(true);
+  const [gemData, setGemData] = useState([]);
+  const [apiUrl, setApiUrl] = useState(
+    "https://localhost:7292/api/GemPriceList/FilterGemPriceList"
+  );
+  const prevApiUrl = React.useRef(apiUrl);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setGemData(data);
+        console.log({ data });
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [apiUrl]);
+
+  if (loading) {
+    return (
+      <div className="w-full h-[80vh] flex justify-center items-center">
+        <RingLoader size={100} color="#54cc26" />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col">
-      <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="py-2 min-w-full flex justify-center items-center sm:px-6 lg:px-8">
-          <div className="overflow-hidden shadow-md shadow-green-300 sm:rounded-lg">
-            <table className="min-w-full table-auto border border-green-700">
-              {/* Cols */}
-              <thead className="bg-green-200">
-                <tr>
-                  {col("Parameters", "bg-green-200")} {col("IF")}
-                  {col("VVS1")}
-                  {col("VVS2")}
-                  {col("VS1")}
-                  {col("VS2")}
-                </tr>
-              </thead>
-              <tbody>
-                {/* Row1 */}
-                <tr className="bg-green-50 border-b">
-                  {row("Parameter 1", "bg-green-200")} {row("Data 1")}
-                  {row("Data 2")}
-                  {row("Data 3")}
-                  {row("Data 4")}
-                  {row("Data 5")}
-                </tr>
-                {/* Row2 */}
-                <tr className="bg-green-50 border-b">
-                  {row("Parameter 2", "bg-green-200")} {row("Data 6")}
-                  {row("Data 7")}
-                  {row("Data 8")}
-                  {row("Data 9")}
-                  {row("Data 10")}
-                </tr>
-              </tbody>
-            </table>
+    <div className="">
+      <div className="flex flex-col ">
+        <div className="overflow-x-auto">
+          <div className="py-2 min-w-full">
+            <div className="overflow-hidden flex justify-center items-center">
+              <table className="w-[90vw] table-auto border border-green-700">
+                {/* Cols */}
+                <thead className="bg-green-200">
+                  <tr>
+                    {col("Origin")}
+                    {col("CaratWeight")}
+                    {col("Color")}
+                    {col("Cut")}
+                    {col("Clarity")}
+                    {col("Price")}
+                    {col("EffDate")}
+                  </tr>
+                </thead>
+                <tbody>
+                  {gemData.map((gem, index) => (
+                    <tr key={index} className="bg-green-50 border-b">
+                      {row(gem.Origin)}
+                      {row(gem.CaratWeight)}
+                      {row(gem.Color)}
+                      {row(gem.Cut)}
+                      {row(gem.Clarity)}
+                      {row(parseFloat(gem.Price).toFixed(2), "$")}
+                      {row(gem.EffDate)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

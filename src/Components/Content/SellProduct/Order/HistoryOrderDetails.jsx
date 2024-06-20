@@ -68,7 +68,9 @@ export default function HistoryOrderDetails() {
         console.error("Error fetching order history:", error);
       }
     };
-    fetchOrderHistory();
+    setInterval(() => {
+      fetchOrderHistory();
+    }, 1000);
   }, [id]);
 
   // Cancel product
@@ -109,11 +111,12 @@ export default function HistoryOrderDetails() {
         return 0;
       case "Processing":
         return 1;
-      case "Accepted" || "Pending Delivery":
+      case "Accepted":
         return 2;
       case "Deliverying":
+      case "Pending Delivery":
         return 3;
-      case "Complete":
+      case "Deliveried":
         return 4;
       default:
         return 0;
@@ -135,7 +138,11 @@ export default function HistoryOrderDetails() {
               </div>
               <div
                 onClick={Cancel}
-                className="text-[2em] h-0 -translate-y-3 translate-x-3 cursor-pointer hover:text-red-400"
+                className={`text-[2em] h-0 -translate-y-3 translate-x-3 cursor-pointer hover:text-red-400  ${
+                  currentStep >= 3 || currentStep >= 4 || currentStep === 0
+                    ? "hidden"
+                    : ""
+                }`}
               >
                 <ion-icon name="close-outline"></ion-icon>
               </div>
@@ -149,11 +156,7 @@ export default function HistoryOrderDetails() {
                 showCancel
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
-              } transition-all duration-1000 drop-shadow-xl bg-black bg-opacity-35 ${
-                currentStep >= 3 || currentStep >= 4 || currentStep === 0
-                  ? "hidden"
-                  : ""
-              }`}
+              } transition-all duration-1000 drop-shadow-xl bg-black bg-opacity-35`}
             >
               <div className="w-full h-full flex flex-col justify-center items-center">
                 <div className="text-center flex flex-col items-center">
@@ -297,19 +300,19 @@ export default function HistoryOrderDetails() {
                 Total: {orderProcess.FinalPrice.toFixed(2)}$
               </div>
               <div className="flex items-center">
-                <div className="">Payment: </div>
+                <div className="">Payment:</div>
                 <div
                   className={`${
-                    paymentMethod === "Card"
+                    orderProcess.Payment === "Card"
                       ? "bg-blue-400"
-                      : paymentMethod === "PayPal"
+                      : orderProcess.Payment === "PayPal"
                       ? "bg-yellow-400"
-                      : paymentMethod === "Received"
+                      : orderProcess.Payment === "Received"
                       ? "bg-green-800"
                       : ""
                   } rounded-md px-2 ml-2 text-white`}
                 >
-                  {paymentMethod}
+                  {orderProcess.Payment || paymentMethod}
                 </div>
               </div>
             </div>

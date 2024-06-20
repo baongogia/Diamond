@@ -13,7 +13,19 @@ export const title = (title, info, shop) => {
       <div
         data-aos="fade-up"
         data-aos-duration="1000"
-        className="uppercase text-[1.6em] text tracking-wide mb-3"
+        className={`uppercase text-[1.6em] text tracking-wide mb-3 ${
+          title === "THE OCELLE NECKLACE"
+            ? "blueneck"
+            : title === "THE RYU NECKLACE"
+            ? "greenneck"
+            : title === "The Magic Of Sparkle Of Heaven"
+            ? "magic"
+            : title === "BEAUTÉS DU MONDE"
+            ? "beauty"
+            : title === "LE VOYAGE RECOMMENCÉ"
+            ? "vol"
+            : "text-black"
+        }`}
       >
         {title}
       </div>

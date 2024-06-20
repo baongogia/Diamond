@@ -91,8 +91,9 @@ export default function OrderHistory() {
         <div className="w-[81%] font-serif h-[80%] border border-green-700 flex justify-around items-center rounded-md">
           {navStatus("Processing")}
           {navStatus("Accepted")}
+          {navStatus("Pending Delivery")}
           {navStatus("Deliverying")}
-          {navStatus("Complete")}
+          {navStatus("Deliveried")}
           {navStatus("Cancelled")}
         </div>
       </div>

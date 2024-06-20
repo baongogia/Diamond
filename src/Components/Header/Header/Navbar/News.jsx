@@ -1,5 +1,5 @@
 import React from "react";
-import { footerLink } from "../../Footer/FooterList";
+import { footerLink } from "../../../Footer/FooterList";
 
 export default function News() {
   return (

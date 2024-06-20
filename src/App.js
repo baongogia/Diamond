@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import HideNav from "./Components/Hide/HideFooter";
-import Navbar from "./Components/Header/Header/Navbar";
+import Navbar from "./Components/Header/Header/Navbar/Navbar";
 import Footer from "./Components/Footer/Footer";
 import HideFooter from "./Components/Hide/HideFooter";
 

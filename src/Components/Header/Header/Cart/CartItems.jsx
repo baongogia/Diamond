@@ -5,32 +5,32 @@ export default function CartItems({ id, product }) {
   const { removeFromCart } = useContext(CartContext);
   const [remove, setRemove] = useState(false);
   return (
-    <div className="relative mt-2 flex justify-between items-center w-full h-[30%]">
+    <div className="relative mt-3 flex justify-between items-center w-full h-[30%]">
       {/* Background */}
       <div
         style={{
           backgroundImage: `url(${product.image})`,
         }}
-        className="w-1/3 h-[90%] bg-green-300 bg-cover bg-center"
+        className="w-[37%] h-[100%] bg-cover bg-center rounded-md"
       ></div>
       {/* Information */}
-      <div className="absolute left-1/3 ml-3">
-        <div className="text uppercase">{product.name}</div>
+      <div className="ml-3 w-[58%]">
+        <div className="text uppercase w-[90%]">{product.name}</div>
         <div className="font-serif">{product.material}</div>
         <div className="font-serif">Size: {product.size}</div>
         <div className="font-serif">Quantity: {product.quantity}</div>
         <div className="text uppercase">
-          {parseFloat(product.price).toFixed(2)}$
+          ${parseFloat(product.price).toFixed(2)}
         </div>
       </div>
       {/* Cancel */}
       <div
         onClick={() => setRemove(true)}
-        className="absolute top-2 right-2 opacity-40 hover:opacity-80 cursor-pointer"
+        className="absolute top-0 right-2 opacity-40 hover:opacity-80 cursor-pointer"
       >
         <ion-icon size="large" name="close-circle-outline"></ion-icon>
       </div>
-      {/* Alert */}
+      {/* Alert when cancel product */}
       <div
         className={`absolute w-full h-full bg-white bg-opacity-85 ${
           remove

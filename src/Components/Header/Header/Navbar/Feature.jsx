@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../Login/UserContext";
-import Cart from "./Cart/Cart";
-import { CartContext } from "./Cart/CartContext";
+import { UserContext } from "../../Login/UserContext";
+import Cart from "../Cart/Cart";
+import { CartContext } from "../Cart/CartContext";
 
 export default function Feature() {
   const { showCart2, setShowCart: setShowCartContext } =
@@ -28,7 +28,7 @@ export default function Feature() {
   }, [showCart]);
 
   return (
-    <div className={`${isLoggedIn ? "w-[17%]" : "w-[13%]"} pt-4 pr-8`}>
+    <div className={`${isLoggedIn ? "w-[17%]" : "w-[13%]"} pt-5 pr-8`}>
       {/* Feature list */}
       {isLoggedIn ? (
         <ul className="flex justify-between items-center text-[1.2em]">
