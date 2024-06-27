@@ -95,7 +95,7 @@ export default function ShoppingBag() {
             </div>
             <Link
               to={`/CheckOutPage`}
-              className="bg-black uppercase text-center text-white w-full font-semibold py-1 border-black border-[0.1em] cursor-pointer transition-colors duration-500 hover:bg-white hover:text-black"
+              className="bg-black uppercase text-center text-white w-full font-semibold py-1 border-green-700 border-[0.1em] cursor-pointer transition-colors duration-500 hover:bg-white hover:text-black"
             >
               proceed to checkout
             </Link>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "./CartContext";
 import CartItems from "./CartItems";
@@ -6,6 +6,8 @@ import CartItems from "./CartItems";
 export default function Cart({ setShowCart, setOverlay }) {
   const { cartItems } = useContext(CartContext);
   const navigate = useNavigate();
+  const [navigateTo, setNavigateTo] = useState(null);
+
   const subtotal = cartItems
     .reduce((total, item) => total + item.price * item.quantity, 0)
     .toFixed(2);
@@ -16,10 +18,17 @@ export default function Cart({ setShowCart, setOverlay }) {
   };
 
   const handleLinkClick = (path) => {
-    handleShow();
     setShowCart(false);
-    navigate(path);
+    setOverlay(false);
+    setNavigateTo(path);
   };
+
+  useEffect(() => {
+    if (navigateTo) {
+      navigate(navigateTo);
+    }
+  }, [navigateTo, navigate]);
+
   return (
     <div
       className={`relative w-[33vw] border-l-[0.1em] border-l-green-700 h-screen flex flex-col justify-center items-center`}
@@ -43,7 +52,9 @@ export default function Cart({ setShowCart, setOverlay }) {
       {/* Items */}
       <div className="w-[90%] h-[70vh] overflow-y-auto mt-8">
         {cartItems.length > 0 ? (
-          cartItems.map((item) => <CartItems id={item.id} product={item} />)
+          cartItems.map((item) => (
+            <CartItems id={item.id} product={item} key={item.id} />
+          ))
         ) : (
           <div className=""></div>
         )}

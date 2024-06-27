@@ -17,7 +17,8 @@ body {
   font-family: "Le Major";
 }
 /* Text gradient */
-.text-gradient {
+
+.vn {
   background: linear-gradient(90deg, #e72e00, #ddc701);
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -52,6 +53,12 @@ body {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.infor {
+  background: linear-gradient(90deg, #007102, #24ac44);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 /* Hover CSS */
 .list-link {
   position: relative;
@@ -65,7 +72,6 @@ body {
   content: "";
   position: absolute;
   width: 86%;
-  /* width: 90%; */
   height: 4px;
   bottom: 0px;
   left: 0;
@@ -166,6 +172,46 @@ body {
 .footer-link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+.profile-link {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.profile-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: 0px;
+  left: 0;
+  background-color: rgb(62, 184, 62);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s ease;
+}
+
+.profile-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.testcolor {
+  color: rgba(6, 148, 6, 0.682);
+}
+
+.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.unactive::after {
+  transform: scaleX(0);
+  transform-origin: right;
 }
 
 /* AOS */

@@ -19,10 +19,10 @@ export default function DiamonKnow() {
 
   return (
     <div className="relative w-full h-[180vh]">
-      <div className="absolute -top-8 w-full h-full  overflow-hidden">
+      <div className="absolute -top-8 2xl:-top-[5vh] w-full h-full overflow-hidden">
         <div
           ref={scrollContainerRef}
-          className="overflow-hidden -translate-y-[33vh]"
+          className="overflow-hidden -translate-y-[33vh] 2xl:-translate-y-[20vh]"
         >
           <iframe
             src="https://www.ssplatinum.com/generalinfo/diamond-knowledge.aspx"

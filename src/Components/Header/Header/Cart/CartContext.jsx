@@ -49,6 +49,10 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const isProductInCart = (productID) => {
+    return cartItems.some((item) => item.productID === productID);
+  };
+
   const clearCart = () => {
     setCartItems([]);
   };
@@ -77,6 +81,7 @@ export const CartProvider = ({ children }) => {
         setShowCart,
         clearCart,
         placeOrder,
+        isProductInCart,
       }}
     >
       {children}

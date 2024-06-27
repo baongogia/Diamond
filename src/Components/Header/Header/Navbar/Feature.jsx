@@ -34,10 +34,11 @@ export default function Feature() {
         <ul className="flex justify-between items-center text-[1.2em]">
           <Link
             to={"/UserProfile"}
-            className={`cursor-pointer flex hover:opacity-55 text-red-500`}
+            className={`cursor-pointer flex hover:opacity-55 text-green-500`}
           >
             <div className="font-mono text-[0.7em] mr-2 text-black uppercase">
-              {userData.given_name || userData.Username}
+              {userData.given_name ||
+                userData.FirstName + " " + userData.LastName}
             </div>
             <ion-icon name="person-outline"></ion-icon>
           </Link>

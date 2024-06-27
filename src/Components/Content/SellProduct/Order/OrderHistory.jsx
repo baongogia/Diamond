@@ -16,7 +16,7 @@ export default function OrderHistory() {
 
   // Data state
   const { userData } = useContext(UserContext);
-  const username = userData?.Username;
+  const username = userData?.UserName;
   const [orderHistory, setOrderHistory] = useState([]);
   const [expandedOrders, setExpandedOrders] = useState({});
 
@@ -154,7 +154,7 @@ export default function OrderHistory() {
                   </div>
                 ))
               ) : (
-                <div className="w-full h-[55vh] flex flex-col justify-center items-center">
+                <div className="w-full h-[60vh] flex flex-col justify-center items-center">
                   <RingLoader size={100} color="#54cc26" />
                 </div>
               )}

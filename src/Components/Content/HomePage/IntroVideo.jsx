@@ -13,7 +13,7 @@ const IntroVideo = () => {
   return (
     <div
       data-aos="fade-up"
-      className="w-screen flex justify-center items-center -mt-12"
+      className="w-screen flex justify-center items-center -mt-12 2xl:-mt-16"
     >
       <video
         className="object-cover" // Ensures the video covers the container while maintaining aspect ratio

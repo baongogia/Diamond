@@ -12,9 +12,39 @@ export default function PaymentMethod() {
   const { setOrder } = useContext(OrderContext);
   const { userData } = useContext(UserContext);
   const { paymentMethod, setPaymentMethod } = useContext(PaymentContext);
-  const createOrder = async () => {
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const navigate = useNavigate();
+  const deposit = subtotal / 10;
+
+  const changeProductStatus = async (productIds) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7292/api/Products/UpdateStatus`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productIds),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("Status order change successfully:", result);
+    } catch (error) {
+      console.error("There was an error creating the order:", error);
+    }
+  };
+
+  const createOrder = async (paymentDetails) => {
     const orderData = {
-      Username: userData.Username,
+      Username: userData.UserName,
       OrderDate: new Date().toISOString(),
       PaymentMethod: paymentMethod,
       Products: cartItems.map((item) => ({
@@ -23,7 +53,8 @@ export default function PaymentMethod() {
         CustomizedSize: item.size,
         Quantity: item.quantity,
       })),
-      Deposits: 0,
+      Deposits: deposit,
+      PaymentDetails: paymentDetails,
     };
 
     try {
@@ -44,28 +75,23 @@ export default function PaymentMethod() {
 
       const result = await response.json();
       setOrder(result);
-      console.log("Order created successfully:", result);
+      localStorage.setItem("order", JSON.stringify(result));
+      changeProductStatus(cartItems.map((item) => item.productID));
       clearCart();
     } catch (error) {
       console.error("There was an error creating the order:", error);
     }
   };
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-  const halfSubtotal = subtotal / 2;
-  const deposit = halfSubtotal.toLocaleString("en-US");
 
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
   };
-  const navigate = useNavigate();
+
   const handlePaymentSuccess = (details) => {
-    console.log("Payment Successful:", details);
+    createOrder(details);
     clearCart();
-    createOrder();
-    navigate("/OrderSuccess"); // Chuyển đến trang thanh toán thành công
+    navigate("/OrderSuccess");
+    console.log("Payment Successful:", details);
   };
 
   return (
@@ -114,7 +140,10 @@ export default function PaymentMethod() {
           {paymentMethod === "PayPal" ? (
             <div className="w-full ml-10 px-3 rounded-lg mt-8 mb-2 h-16 flex justify-center items-center cursor-pointer">
               <div className="">
-                <Paypal amount={subtotal} onSuccess={handlePaymentSuccess} />
+                <Paypal
+                  amount={subtotal - 0.05 * subtotal}
+                  onSuccess={handlePaymentSuccess}
+                />
               </div>
             </div>
           ) : (
@@ -148,7 +177,7 @@ export default function PaymentMethod() {
             ></ion-icon>
           </div>
           <div className="w-1/2">
-            <label htmlFor="Recieved" className="-translate-x-4">
+            <label htmlFor="Received" className="-translate-x-4">
               Received
             </label>
           </div>
@@ -160,22 +189,49 @@ export default function PaymentMethod() {
         >
           <div
             style={{
-              backgroundImage: `url('https://cdn.qrcode-ai.com/qrcode/baa38bafb43c2be07f92e6a45d1eaf83-1717434661438.png')`,
+              backgroundImage: `url('https://cdn.qrcode-ai.com/qrcode/a4a5d48322f55187147712a4bac0c155-1718981635066.png')`,
             }}
             className="w-1/2 h-full bg-contain bg-center bg-no-repeat"
           ></div>
           <div className="w-1/2 h-full flex flex-col justify-between">
             <div className="">
-              Please make a payment of 50% of the product's value in advance to
+              Please make a payment of 10% of the product's value in advance to
               complete the order.
             </div>
             <div className="">
-              <div className="text">Product: LOVE BRACELET</div>
-              <div className="text">Cost: {deposit}</div>
+              <div className="text h-[3em] overflow-y-auto">
+                Product:{" "}
+                {cartItems.map((item) => (
+                  <div className="text-green-800" key={item.productID}>
+                    {item.name}
+                  </div>
+                ))}
+              </div>
+              <div className="text">Cost: ${deposit.toFixed(2)}</div>
             </div>
-            <div className="w-full h-10 bg-green-400 cursor-pointer hover:bg-opacity-85 rounded-full flex justify-center items-center">
-              <div className="text text-white uppercase">Pay all</div>
-            </div>
+            {paymentMethod === "Received" && (
+              <div className="relative w-full h-10 bg-yellow-400 cursor-pointer hover:bg-opacity-85 rounded-full flex justify-center items-center">
+                <div className=" w-full text text-white uppercase">
+                  <div className="absolute top-0 right-[35%] z-0">
+                    <img
+                      src="https://canhme.com/wp-content/uploads/2016/01/Paypal.png"
+                      alt=""
+                      className="w-24 -translate-y-[0.1em]"
+                    />
+                  </div>
+                </div>
+                <div className="absolute top-0 opacity-0 left-10 z-10">
+                  <div className="w-full -translate-y-2 rounded-lg mt-8 mb-2 h-16 flex justify-center items-center cursor-pointer">
+                    <div className="">
+                      <Paypal
+                        amount={subtotal * 0.1}
+                        onSuccess={handlePaymentSuccess}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

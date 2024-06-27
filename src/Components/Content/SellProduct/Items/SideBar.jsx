@@ -50,7 +50,7 @@ export default function SideBar({ initialCategory }) {
       const newValues = groupValues.includes(value)
         ? groupValues.filter((v) => v !== value) // Uncheck the value if it's already checked
         : [value]; // Only allow one value to be selected in the group
-
+      // tạo một object mới từ prevFilters, sau đó cập nhật giá trị của groupName thành một mảng chứa newValues
       return { ...prevFilters, [groupName]: newValues };
     });
   }, []);
@@ -59,9 +59,13 @@ export default function SideBar({ initialCategory }) {
     const params = {
       MinCaratWeight: caratWeight[0],
       MaxCaratWeight: caratWeight[1],
+      // chuyển đổi object filters thành một mảng các cặp [key, value]
       ...Object.fromEntries(
+        // chuyển đổi mảng các cặp [key, value] trở lại thành một object
         Object.entries(filters)
+          // lọc ra các cặp [key, value] mà value (mảng) không rỗng
           .filter(([_, values]) => values.length)
+          // Convert to string
           .map(([key, values]) => [key, values.join(",")])
       ),
     };

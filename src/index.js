@@ -11,6 +11,7 @@ import { OrderProvider } from "./Components/Content/SellProduct/Order/OrderConte
 import { PaymentProvider } from "./Components/Content/SellProduct/Payment/PaymentContext";
 import { SortingProvider } from "./Components/Content/SellProduct/Sort/SortingContext";
 import { DataProvider } from "./Components/Content/SellProduct/Sort/DataContext";
+import { WishlistProvider } from "./Components/Header/SileProfileBar/WishlistContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -23,7 +24,9 @@ root.render(
               <UserProvider>
                 <SortingProvider>
                   <DataProvider>
-                    <App />
+                    <WishlistProvider>
+                      <App />
+                    </WishlistProvider>
                   </DataProvider>
                 </SortingProvider>
               </UserProvider>

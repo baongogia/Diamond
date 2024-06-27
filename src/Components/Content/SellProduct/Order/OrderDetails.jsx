@@ -16,7 +16,7 @@ export default function OrderDetails() {
   const [showCancel, setShowCancel] = useState(false);
   const { paymentMethod } = useContext(PaymentContext);
   const navigate = useNavigate();
-
+  console.log(paymentMethod);
   const Cancel = () => {
     setIsFlipped(!isFlipped);
     setShowCancel(!showCancel);
@@ -128,7 +128,7 @@ export default function OrderDetails() {
   const currentStep = getCurrentStep(order?.OrderStatus);
 
   if (!order) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
   return (
     <div className="mt-12">
@@ -302,6 +302,7 @@ export default function OrderDetails() {
               <div className="">Price: {order.TotalPrice.toFixed(2)}$</div>
               <div className="">Discount: {order.DiscountRate * 100}%</div>
               <div className="">Total: {order.FinalPrice.toFixed(2)}$</div>
+              {/* Payment method */}
               <div className="flex items-center">
                 <div className="">Payment:</div>
                 <div
@@ -315,16 +316,16 @@ export default function OrderDetails() {
                       : ""
                   } rounded-md px-2 ml-2 text-white`}
                 >
-                  {order.Payment || paymentMethod}
+                  {order.Payment !== "" ? order.Payment || paymentMethod : ""}
                 </div>
               </div>
             </div>
           </div>
-          <div className="absolute bottom-6 translate-x-[60%]">
+          <div className="absolute bottom-0 translate-x-[17vw]">
             <img
-              src="https://logos-world.net/wp-content/uploads/2020/06/Cartier-Symbol.png"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfQKzLQdB9YfdlZXmfFGHXJPTuz849jMo9dvQU_zHVVWdlKGpa8ZMLKPY_NSWDL7Ej6oM&usqp=CAU"
               alt=""
-              className="w-[40%]"
+              className="w-[85%]"
             />
           </div>
         </div>

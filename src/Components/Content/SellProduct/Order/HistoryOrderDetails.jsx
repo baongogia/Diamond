@@ -317,11 +317,11 @@ export default function HistoryOrderDetails() {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-6 translate-x-[60%]">
+          <div className="absolute bottom-0 translate-x-[17vw]">
             <img
-              src="https://logos-world.net/wp-content/uploads/2020/06/Cartier-Symbol.png"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfQKzLQdB9YfdlZXmfFGHXJPTuz849jMo9dvQU_zHVVWdlKGpa8ZMLKPY_NSWDL7Ej6oM&usqp=CAU"
               alt=""
-              className="w-[40%]"
+              className="w-[85%]"
             />
           </div>
         </div>

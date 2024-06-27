@@ -30,7 +30,7 @@ export default function HistoryProductCard({
           <div className="">Total Price: {price}$</div>
           <div className="flex justify-between w-[60%]">
             <div
-              onClick={() => navigate("/product")}
+              onClick={() => navigate(`/ProductPage/${code}`)}
               className="border p-2 flex items-center rounded-md hover:bg-green-700 hover:text-white cursor-pointer border-green-700"
             >
               <ion-icon name="reload-outline"></ion-icon>

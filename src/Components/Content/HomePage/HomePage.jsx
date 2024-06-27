@@ -47,7 +47,7 @@ export const title = (title, info, shop) => {
   );
 };
 export default function HomePage() {
-  const [topRated, setTopRated] = useState([]);
+  // const [topRated, setTopRated] = useState([]);
   const [univer, setUniver] = useState([]);
   // AOS
   useEffect(() => {
@@ -58,24 +58,24 @@ export default function HomePage() {
     });
   }, []);
   // Data
-  useEffect(() => {
-    fetch("https://localhost:7292/api/Products/Category/Rings")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setTopRated(data);
-      })
-      .catch((error) => {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("https://localhost:7292/api/Products/Category/Rings")
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setTopRated(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error(
+  //         "There has been a problem with your fetch operation:",
+  //         error
+  //       );
+  //     });
+  // }, []);
 
   useEffect(() => {
     fetch("https://localhost:7292/api/Products/Category/Bracelets")

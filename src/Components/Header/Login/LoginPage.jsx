@@ -13,6 +13,9 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useContext(UserContext);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
   const navigate = useNavigate();
   const handleLogin = async (username, password) => {
     try {
@@ -23,10 +26,12 @@ export default function LoginPage() {
           password,
         }
       );
-      const userData = response.data;
+      const userData = response.data.CustomerInfo;
+      const token = userData.Token;
 
       // Update local storage
       localStorage.setItem("userData", JSON.stringify({ data: userData }));
+      localStorage.setItem("token", token);
       localStorage.setItem("isLoggedIn", "true");
 
       // Update context state
@@ -103,7 +108,7 @@ export default function LoginPage() {
           } flex justify-center`}
         >
           {/* Note */}
-          <div className={`font-serif mt-20 text-start w-[37.5%]`}>
+          <div className={`font-serif mt-10 text-start w-[37.5%]`}>
             {register
               ? "This space allows you to manage your personal information, e-Boutique orders, news updates and newsletter subscriptions."
               : "If you are already registed with Eternity, login here:"}
@@ -117,14 +122,14 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="w-1/4">
               <label className="block mb-8">
                 <span className="block text-sm text-zinc-700 opacity-60">
-                  Email address
+                  Username
                 </span>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  placeholder="your@gmail.com"
+                  placeholder="your_username"
                   className="peer ... outline-none border-b-[0.1em] border-b-black bg-zinc-300 bg-opacity-0 w-full"
                 />
               </label>

@@ -4,6 +4,7 @@ import { FaHeart } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { CartContext } from "../../Header/Header/Cart/CartContext";
 import Select from "react-select";
+import { WishlistContext } from "../../Header/SileProfileBar/WishlistContext";
 
 export default function SelectProduct({ details }) {
   const { id } = useParams();
@@ -18,7 +19,15 @@ export default function SelectProduct({ details }) {
   const [showCer, setShowCer] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showVid, setShowVid] = useState(false);
-  const { setShowCart, addToCart } = useContext(CartContext);
+  const { setShowCart, addToCart, isProductInCart } = useContext(CartContext);
+  const { addToWishlist, removeFromWishlist, isInWishlist } =
+    useContext(WishlistContext);
+  const isAvailable = details.Status;
+  console.log(isAvailable);
+  // Hold wishlist icon;
+  useEffect(() => {
+    setRedHeart(isInWishlist(details.ProductId));
+  }, [isInWishlist, details.ProductId]);
   //  Get original size
   useEffect(() => {
     if (oriSize) {
@@ -43,7 +52,7 @@ export default function SelectProduct({ details }) {
   };
   // Add to cart
   const handleAddToCart = () => {
-    if (selectedSize >= oriSize) {
+    if (selectedSize >= oriSize && !isProductInCart(details.ProductId)) {
       const product = {
         productID: details.ProductId,
         image: details.Image,
@@ -61,17 +70,30 @@ export default function SelectProduct({ details }) {
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
-
+  // Add to wish list
   const toggleHeart = () => {
-    setRedHeart(!redHeart);
+    if (isInWishlist(details.ProductId)) {
+      removeFromWishlist(details.ProductId);
+      setRedHeart(false);
+    } else {
+      addToWishlist({
+        productID: details.ProductId,
+        image: details.Image,
+        name: details.ProductName,
+        material: details.Material,
+        size: selectedSize,
+        price: price,
+        code: id,
+      });
+      setRedHeart(true);
+    }
   };
-  // Miss
+  // Miss options
   const getMissingSelections = () => {
     let missing = [];
     if (!size) missing.push("Size");
     return missing.join(", ");
   };
-
   const missingSelections = getMissingSelections();
   const missingMessage =
     missingSelections.length === 1
@@ -87,11 +109,10 @@ export default function SelectProduct({ details }) {
     { value: 15, label: "15" },
     { value: details.ProductSize, label: `${details.ProductSize}` },
   ];
-
   const handleChange = (selectedOption) => {
     setSize(selectedOption);
   };
-  // Css input
+  // Css input box
   const colourStyles = {
     control: (styles, { isFocused }) => ({
       ...styles,
@@ -120,15 +141,51 @@ export default function SelectProduct({ details }) {
 
   return (
     <div className="w-[80%] float-right flex flex-col justify-center items-start">
+      {/* Product name */}
       <div className="text uppercase text-[1.6em] text-green-800">
         {details.ProductName}
       </div>
-      <div className="mb-3 Mfont">
-        {`${details.Description}, 24K ${details.Material}, ${details.CaratWeight} Carat, ${details.GemOrigin} Origin, Clarity ${details.Clarity},  Color ${details.Color}, ${details.Cut} Cut, For ${details.Gender}.`}
+      {/* Information */}
+      <div className="grid grid-cols-2 Mfont">
+        <div className="flex items-center mb-1">
+          <span className="font-bold infor">Material:</span>
+          <span className="ml-2">24K {details.Material}</span>
+        </div>
+        <div className="flex items-center mb-1 ml-3">
+          <span className="font-bold infor">Carat Weight:</span>
+          <span className="ml-2">{details.CaratWeight} Carat</span>
+        </div>
+        <div className="flex items-center mb-1">
+          <span className="font-bold infor">Origin:</span>
+          <span className="ml-2">{details.GemOrigin}</span>
+        </div>
+        <div className="flex items-center mb-1 ml-3 ">
+          <span className="font-bold infor">Clarity:</span>
+          <span className="ml-2">{details.Clarity}</span>
+        </div>
+        <div className="flex items-center mb-1">
+          <span className="font-bold infor">Color:</span>
+          <span className="ml-2">{details.Color}</span>
+        </div>
+        <div className="flex items-center mb-1 ml-3 ">
+          <span className="font-bold infor">Cut:</span>
+          <span className="ml-2">{details.Cut}</span>
+        </div>
+        <div className="flex items-center mb-1">
+          <span className="font-bold infor">For:</span>
+          <span className="ml-2">{details.Gender}</span>
+        </div>
+        <div className="flex items-center mb-1 ml-3">
+          <span className="font-bold infor">Brand:</span>
+          <span className="ml-2">Enternity</span>
+        </div>
       </div>
+      {/* Code */}
       <div className="flex w-full justify-between items-center">
         <div className="">
-          <div className="text uppercase text-green-800 mb-2">Code: {id}</div>
+          <div className="uppercase font-bold text-green-800 mb-2">
+            Code: {id}
+          </div>
         </div>
         <div
           onClick={() => {
@@ -149,21 +206,21 @@ export default function SelectProduct({ details }) {
           options={options}
           onChange={handleChange}
           styles={colourStyles}
-          className="text mt-8"
+          className="text mt-1"
           value={size}
         />
       </div>
       {/* Price */}
       <div className="flex w-full h-[5vh] mt-4 justify-between items-center">
         <div className="text uppercase text-[1.6em] text-green-800">
-          {`${formatPrice(price)}`}
+          {isAvailable ? `${formatPrice(price)}` : "SOLD OUT"}
         </div>
         {/* Measuring */}
         <div
           onMouseEnter={() => setShowIns(true)}
           onMouseLeave={() => setShowIns(false)}
           onClick={() => setShowVid(true)}
-          className="relative cursor-pointer hover:text-green-700"
+          className="relative translate-x-1 cursor-pointer hover:text-green-700"
         >
           <ion-icon size="large" name="help-circle-outline"></ion-icon>
           <div
@@ -181,14 +238,16 @@ export default function SelectProduct({ details }) {
           onMouseEnter={() => !size && setShowMissingMsg(true)}
           onMouseLeave={() => setShowMissingMsg(false)}
           onClick={handleAddToCart}
-          className={`group w-[83%] h-[2.5em] bg-black flex justify-center items-center cursor-pointer ${
-            size ? "bg-opacity-100" : "bg-opacity-25 hover:bg-opacity-100"
+          className={`group w-[83%] h-[2.5em] bg-green-950 flex justify-center items-center cursor-pointer ${
+            size && isAvailable && !isProductInCart(details.ProductId)
+              ? "bg-opacity-100 shadow-md shadow-green-800 hover:shadow-lg hover:shadow-green-800 transition-all duration-300"
+              : "bg-opacity-25 hover:bg-opacity-100 pointer-events-none"
           } }`}
         >
           <div
             className={`text uppercase ${
-              size
-                ? "text-white"
+              size && isAvailable && !isProductInCart(details.ProductId)
+                ? "text-green-50"
                 : "text-gray-700 group-hover:text-white group-hover:pointer-events-none"
             }`}
           >
@@ -197,7 +256,7 @@ export default function SelectProduct({ details }) {
         </div>
         <div
           onClick={toggleHeart}
-          className={`w-[12%] h-[2.5em] text border-black border-[0.1em] flex justify-center items-center hover:text-red-500 cursor-pointer ${
+          className={`w-[12%] h-[2.5em] text border-green-700 border-[0.1em] flex justify-center items-center hover:text-red-500 cursor-pointer ${
             redHeart ? "text-red-500" : ""
           }`}
         >

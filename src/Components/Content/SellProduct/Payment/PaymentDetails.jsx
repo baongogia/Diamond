@@ -6,26 +6,52 @@ import { OrderContext } from "../Order/OrderContext";
 import { UserContext } from "../../../Header/Login/UserContext";
 import { PaymentContext } from "./PaymentContext";
 
-export default function PaymentDetails({ title, linkto, pay }) {
+export default function PaymentDetails({ title, linkto }) {
   const navigate = useNavigate();
   const { setOrder } = useContext(OrderContext);
   const { userData } = useContext(UserContext);
   const { paymentMethod } = useContext(PaymentContext);
 
-  // Creater Order
-  const { clearCart, cartItems } = useContext(CartContext);
-
+  // Retrieve order from localStorage if available
   useEffect(() => {
-    // Retrieve order from localStorage if available
     const savedOrder = localStorage.getItem("order");
     if (savedOrder) {
       setOrder(JSON.parse(savedOrder));
     }
   }, [setOrder]);
 
+  // Clear Cart and get cart items
+  const { clearCart, cartItems } = useContext(CartContext);
+  console.log(cartItems.map((item) => item.productID));
+
+  // Change Product Status
+  const changeProductStatus = async (productIds) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7292/api/Products/UpdateStatus`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productIds),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("Status order change successfully:", result);
+    } catch (error) {
+      console.error("There was an error creating the order:", error);
+    }
+  };
+
+  // Create Order
   const createOrder = async () => {
     const orderData = {
-      Username: userData.Username,
+      Username: userData.UserName,
       OrderDate: new Date().toISOString(),
       PaymentMethod: paymentMethod,
       Products: cartItems.map((item) => ({
@@ -56,6 +82,7 @@ export default function PaymentDetails({ title, linkto, pay }) {
       const result = await response.json();
       setOrder(result);
       localStorage.setItem("order", JSON.stringify(result));
+      changeProductStatus(cartItems.map((item) => item.productID));
       console.log("Order created successfully:", result);
       clearCart();
     } catch (error) {
@@ -63,16 +90,16 @@ export default function PaymentDetails({ title, linkto, pay }) {
     }
   };
 
-  // Total
+  // Calculate Total
   const total = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
   const subtotal = total;
-  const discount = total * 0.05;
+  const discount = userData.DiscountRate * total;
   const finalPrice = total - discount;
 
-  // Handle click
+  // Handle Click
   const handleClick = () => {
     if (title.toLowerCase() === "place your order") {
       createOrder();
@@ -86,16 +113,15 @@ export default function PaymentDetails({ title, linkto, pay }) {
         <div className="flex w-full justify-between items-center">
           <div className="">
             <div className="text uppercase text-[1.3em]">order summary</div>
-            <div className="">2 Items</div>
+            <div className="">{cartItems.length} Items</div>
           </div>
           <div className="font-serif title-link h-10">Modify</div>
         </div>
         {/* Products */}
         <div className="relative w-full flex flex-col h-[31vh] overflow-y-auto mb-4">
-          {/* Product 1 */}
           {cartItems.length > 0 ? (
             cartItems.map((item) => (
-              <PaymentDetailsCard id={item.id} item={item} />
+              <PaymentDetailsCard key={item.productID} item={item} />
             ))
           ) : (
             <div className=""></div>
@@ -119,7 +145,7 @@ export default function PaymentDetails({ title, linkto, pay }) {
                 <div className="text uppercase text-[0.9em]">
                   STANDARD DELIVERY
                 </div>
-                <div className="text uppercase text-[0.9em]">0,00$</div>
+                <div className="text uppercase text-[0.9em]">0.00$</div>
               </div>
             </div>
 
@@ -139,8 +165,8 @@ export default function PaymentDetails({ title, linkto, pay }) {
         <div className="mt-6">
           <div
             onClick={handleClick}
-            className="bg-black uppercase text-center text-white w-full font-semibold py-1 border-black border-[0.1em]
-             cursor-pointer transition-colors duration-500 hover:bg-white hover:text-black"
+            className={`uppercase text-center w-full bg-black text-white font-semibold py-1 border-black border-[0.1em]
+             cursor-pointer transition-colors duration-500 hover:bg-white hover:text-black`}
           >
             {title}
           </div>

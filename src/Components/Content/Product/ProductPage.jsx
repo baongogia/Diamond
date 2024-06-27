@@ -121,7 +121,7 @@ export default function ProductPage() {
               />
             </div>
             {/* Buy */}
-            <div className={`w-[40.1vw] h-[67vh] mr-20 sticky top-0 `}>
+            <div className={`w-[40.1vw] h-[73.5vh] mr-20 sticky top-0 `}>
               <SelectProduct details={productDetails} />
             </div>
           </div>

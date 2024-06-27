@@ -5,7 +5,8 @@ import axios from "axios";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 
-export const clientID = "955907912121-a20eup8a861i31euts7sdp2nqq6dgmot.apps.googleusercontent.com";
+export const clientID =
+  "955907912121-a20eup8a861i31euts7sdp2nqq6dgmot.apps.googleusercontent.com";
 
 function GGLogin() {
   const { login } = useContext(UserContext);
@@ -33,14 +34,13 @@ function GGLogin() {
           }
         );
         const userData = response.data;
-
         // Update local storage
         localStorage.setItem("userData", JSON.stringify({ data: userData }));
         localStorage.setItem("isLoggedIn", "true");
 
         // Update context state
         login(userData);
-        navigate('/UserProfile');
+        navigate("/UserProfile");
       } catch (error) {
         console.error("Failed to fetch user data: ", error);
       }
